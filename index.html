@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Huyền Kiếm Online — V1.5</title>
+<title>Huyền Kiếm Online — V1.6</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -34,9 +34,10 @@
   #questBox .prog{color:#8ecae6;font-weight:700}
   /* Top right */
   #topRight{position:absolute;top:10px;right:10px;text-align:center}
-  #minimap{background:rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.35);border-radius:50%}
+  #minimap{background:rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.35);border-radius:50%;margin-left:auto}
   #fps{font-size:11px;margin-top:3px;text-shadow:0 1px 2px #000}
   #zoneName{font-size:12px;font-weight:700;color:#ffd166;text-shadow:0 1px 3px #000;margin-top:2px}
+  #bossLine{font-size:11px;font-weight:700;color:#ff8787;text-shadow:0 1px 3px #000;margin-top:4px;min-height:14px;max-width:180px;margin-left:auto;text-align:right;line-height:1.35}
   .miniBtns{margin-top:5px;display:flex;gap:5px;justify-content:center;pointer-events:auto;flex-wrap:wrap;max-width:200px;margin-left:auto}
   .miniBtns button{background:rgba(10,15,30,.75);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:5px 8px;font-size:11px;cursor:pointer}
   /* Boss / target */
@@ -115,12 +116,12 @@
     #minimap{width:84px;height:84px}
     #zoneName{font-size:11px}
     #fps{font-size:10px}
-    .miniBtns{max-width:148px;gap:4px}
-    .miniBtns button{font-size:10px;padding:4px 6px}
-    #questBox{top:112px;left:8px;width:172px;padding:6px 8px}
+    .miniBtns{max-width:216px;gap:4px}
+    .miniBtns button{font-size:9.5px;padding:4px 5px}
+    #questBox{top:112px;left:8px;width:158px;padding:6px 8px}
     #questBox h4{font-size:11px}
     #questBox p{font-size:11px;line-height:1.4}
-    #targetBox{top:228px;width:230px}
+    #targetBox{top:248px;width:230px}
     #lootLog{left:8px;bottom:176px;width:190px;font-size:11px;line-height:1.45;max-height:66px}
     #joyBase{width:104px;height:104px;left:14px;bottom:24px}
     #skillBar{right:8px;bottom:20px;gap:6px}
@@ -155,7 +156,7 @@
 
 <div id="startScr">
   <h1>⚔️ HUYỀN KIẾM ONLINE</h1>
-  <h2>V1.5 — Nội Công · Linh Thú · Bí Cảnh · Sưu Tầm</h2>
+  <h2>V1.6 — Ủy Thác · Boss bãi theo giờ · Nội Công · Linh Thú · Bí Cảnh</h2>
   <div class="clsRow">
     <div class="classCard sel" data-cls="kiem">
       <h3>🗡️ Kiếm Tông</h3>
@@ -176,7 +177,7 @@
     <b>Điện thoại:</b> joystick trái di chuyển · kéo nửa phải màn hình xoay camera · các nút skill bên phải
   </div>
   <button id="resetSave">Xoá dữ liệu lưu &amp; chơi lại từ đầu</button>
-  <div id="verTag">V1.5.1 — đồ hoạ khối thử nghiệm · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
+  <div id="verTag">V1.6 — đồ hoạ khối thử nghiệm · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
 </div>
 
 <div id="hud">
@@ -212,9 +213,11 @@
       <button id="ncBtn">🧘 Nội Công</button>
       <button id="spiritBtn">🐾 Linh Thú</button>
       <button id="bcBtn">🌀 Bí Cảnh</button>
+      <button id="reqBtn">📋 Ủy Thác</button>
       <button id="saveBtn">💾 Lưu</button>
       <button id="soundBtn">🔊</button>
     </div>
+    <div id="bossLine"></div>
   </div>
 
   <div id="lootLog"></div>
@@ -234,6 +237,14 @@
     <button class="skBtn" id="atkBtn">⚔️</button>
   </div>
 
+
+  <div id="reqPanel" class="panel">
+    <div class="panelHead"><b>📋 BẢNG ỦY THÁC</b><button class="pClose" data-close="reqPanel">✖</button></div>
+    <div style="color:#adb5bd;font-size:12px">Nhận tối đa 3 ủy thác cùng lúc. Bảng làm mới mỗi ngày; nhận xong 1 việc, bảng bổ sung việc mới.</div>
+    <div id="reqOffers" style="margin-top:8px"></div>
+    <div style="margin-top:12px;border-top:1px solid #2c3542;padding-top:10px"><b>📌 Đang thực hiện</b></div>
+    <div id="reqActive" style="margin-top:8px"></div>
+  </div>
 
   <div id="ncPanel" class="panel">
     <div class="panelHead"><b>🧘 NỘI CÔNG & SƯU TẦM</b><button class="pClose" data-close="ncPanel">✖</button></div>
@@ -323,7 +334,8 @@ var S = {
   questIdx: 0, questProg: 0, started: false, auto: false, sound: true,
   equip: null, bag: [], daily: null, enhSlot: 'weapon',
   nc: {}, spirits: { owned: {}, equipped: [] }, tickets: 0, killsByType: {}, codexClaimed: {},
-  inRealm: false, bcWave: 0
+  inRealm: false, bcWave: 0,
+  reqOffers: [], reqActive: [], reqDay: ''
 };
 function starterEquip(){ return { weapon: mkItem('weapon', 1), armor: mkItem('armor', 1), hat: mkItem('hat', 1), boots: mkItem('boots', 1) }; }
 function maxHp(){ return Math.round(cls().hp + (S.lvl-1) * cls().hpGrow + ncBonus('hp') + spBonus('hp') + codexBonus('hp')); }
@@ -354,7 +366,7 @@ var QUESTS = [
 /* ================= SAVE / LOAD ================= */
 var SAVE_KEY = 'huyenKiemGreybox_v1';
 function saveGame(silent){
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed, reqOffers: S.reqOffers, reqActive: S.reqActive, reqDay: S.reqDay })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
 }
 function applyLoaded(d){
   if(!d) return;
@@ -367,6 +379,7 @@ function applyLoaded(d){
   S.daily = d.daily || null; dailyReset();
   S.nc = d.nc || {}; S.spirits = (d.spirits && d.spirits.owned) ? d.spirits : { owned: {}, equipped: [] };
   S.tickets = d.tickets || 0; S.killsByType = d.killsByType || {}; S.codexClaimed = d.codexClaimed || {};
+  S.reqOffers = Array.isArray(d.reqOffers) ? d.reqOffers : []; S.reqActive = Array.isArray(d.reqActive) ? d.reqActive : []; S.reqDay = d.reqDay || '';
   S.inRealm = false; S.bcWave = 0;
   hp = maxHp(); mp = maxMp();
 }
@@ -401,7 +414,7 @@ function buildWorld(){
   scene.fog = new THREE.Fog(0x87b5d9, 60, 190);
   camera = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 400);
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
   renderer.setSize(innerWidth, innerHeight);
   document.getElementById('game').appendChild(renderer.domElement);
   clock = new THREE.Clock();
@@ -546,12 +559,15 @@ function spawnAllMonsters(){
 }
 
 /* ================= FX / LOOT ================= */
+var dmgActive = 0;
 function dmgNum(worldPos, txt, color, size){
+  if(dmgActive >= 30) return;
   var v = worldPos.clone().project(camera); if(v.z > 1) return;
+  dmgActive++;
   var el = document.createElement('div'); el.className = 'dmgNum'; el.textContent = txt;
   el.style.left = ((v.x*0.5+0.5)*innerWidth) + 'px'; el.style.top = ((-v.y*0.5+0.5)*innerHeight) + 'px';
   el.style.color = color; el.style.fontSize = (size||19) + 'px';
-  document.body.appendChild(el); setTimeout(function(){ el.remove(); }, 820);
+  document.body.appendChild(el); setTimeout(function(){ el.remove(); dmgActive = Math.max(0, dmgActive - 1); }, 820);
 }
 function ringFx(x, z, color, maxR){
   var r = new THREE.Mesh(new THREE.RingGeometry(0.3, 0.5, 28), new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true }));
@@ -644,13 +660,23 @@ function killMonster(m){
     S.questProg++;
     if(S.questProg >= q.need) completeQuest(); else updQuest();
   }
-  S.killsByType[m.type] = (S.killsByType[m.type] || 0) + 1;
+  var kType = m.boss ? 'Hắc Lang Vương' : m.type;
+  S.killsByType[kType] = (S.killsByType[kType] || 0) + 1;
+  reqProg('killAny', null, 1); reqProg('kill', m.type, 1);
+  if(m.cfg.elite || m.boss) reqProg('elite', null, 1);
+  if(m.boss){
+    bossRef = null; S.tickets++;
+    var bSlots = ['weapon','armor','hat','boots']; var bIt = mkItem(bSlots[Math.floor(Math.random()*4)], 5 + Math.floor(Math.random()*2));
+    if(S.bag.length < 30) S.bag.push(bIt);
+    toast('🐺 HẠ HẮC LANG VƯƠNG! +1 Vé Triệu Hồi · rơi ' + bIt.name);
+    logLoot('🐺 Hạ boss bãi: +1 🎟️ Vé Triệu Hồi · trang bị ' + bIt.name + ' (bậc ' + bIt.tier + ')');
+  }
   saveGame(true);
   if(m.realm) bcOnKill();
 }
 function addHT(n, countQuest){
   if(n <= 0) return;
-  S.ht += n; dailyReset(); S.daily.ht += n;
+  S.ht += n; dailyReset(); S.daily.ht += n; reqProg('ht', null, n);
   var q = QUESTS[S.questIdx];
   if(countQuest && q && q.type === '__HT__'){ S.questProg += n; if(S.questProg >= q.need) completeQuest(); else updQuest(); }
   updHud();
@@ -941,7 +967,7 @@ function update(dt){
     document.getElementById('mineFill').style.width = Math.min(100, mining.t/2*100) + '%';
     if(mining.t >= 2){
       var n = mining.node; n.amount--;
-      var gain = 8 + Math.round(Math.random()*7); addHT(gain, true);
+      var gain = 8 + Math.round(Math.random()*7); addHT(gain, true); reqProg('mine', null, 1);
       logLoot('⛏️ Đào được +' + gain + ' Huyền Thiết' + (n.amount<=0 ? ' — điểm mỏ đã cạn, hồi sau 60s' : ''));
       beep(880, 0.12); updHud(); saveGame(true);
       if(n.amount <= 0){ n.respawn = 60; n.crys.forEach(function(c){ c.visible = false; }); }
@@ -1033,6 +1059,7 @@ function animate(){
   var dt = Math.min(clock.getDelta(), 0.05);
   if(S.started){ update(dt); updSkillBtns(dt); }
   updPet(dt, performance.now()/1000);
+  if(S.started) bossTick();
   renderer.render(scene, camera);
   fpsFrames++; fpsTime += dt;
   if(fpsTime >= 0.5){ document.getElementById('fps').textContent = 'FPS: ' + Math.round(fpsFrames/fpsTime); fpsFrames = 0; fpsTime = 0; if(S.started && window.player) drawMinimap(); }
@@ -1083,7 +1110,8 @@ var CODEX_DEF = [
   { type: 'Lang Yêu', stat: 'hp', per: 15, unit: 'HP', needs: [25, 100] },
   { type: 'Thạch Nhân', stat: 'def', per: 2, unit: 'Thủ', needs: [25, 100] },
   { type: 'Trại Chủ', stat: 'atk', per: 4, unit: 'Công', needs: [1, 3] },
-  { type: 'Chúa Mỏ', stat: 'hp', per: 30, unit: 'HP', needs: [1, 3] }
+  { type: 'Chúa Mỏ', stat: 'hp', per: 30, unit: 'HP', needs: [1, 3] },
+  { type: 'Hắc Lang Vương', stat: 'atk', per: 4, unit: 'Công', needs: [1, 5] }
 ];
 function codexBonus(stat){
   var sum = 0;
@@ -1248,7 +1276,7 @@ function bcOnKill(){
   logLoot('🌀 Thưởng đợt ' + w + ': +' + goldR + ' vàng · +' + htR + ' Huyền Thiết');
   if(w < 5){ spawnWave(w + 1); }
   else {
-    S.tickets++; dailyReset(); 
+    S.tickets++; dailyReset(); reqProg('bc', null, 1);
     var slots = ['weapon','armor','hat','boots']; var it = mkItem(slots[Math.floor(Math.random() * 4)], Math.max(2, Math.min(6, Math.round(S.lvl / 3))));
     if(S.bag.length < 30) S.bag.push(it);
     toast('🏆 THẮNG BÍ CẢNH! +1 Vé Triệu Hồi · rơi ' + it.name);
@@ -1277,6 +1305,118 @@ function exitRealm(){
   player.position.set(0, 0, 66);
   toast('🚪 Đã rời Bí Cảnh');
   updHud();
+}
+
+/* ================= UY THAC (REQUESTS) ================= */
+var REQ_POOL = [
+  { kind: 'kill', type: 'Sơn Tặc', need: 8, name: 'Trừ Sơn Tặc quấy phá', gold: 220 },
+  { kind: 'kill', type: 'Lang Yêu', need: 6, name: 'Săn Lang Yêu', gold: 300 },
+  { kind: 'kill', type: 'Thạch Nhân', need: 5, name: 'Đập Thạch Nhân canh mỏ', gold: 380, ht: 15 },
+  { kind: 'killAny', need: 20, name: 'Tuần tra trừ hại', gold: 350 },
+  { kind: 'ht', need: 50, name: 'Thu thập Huyền Thiết', gold: 260 },
+  { kind: 'mine', need: 5, name: 'Khai thác tại mỏ', gold: 240, ht: 10 },
+  { kind: 'elite', need: 1, name: 'Diệt quái tinh anh', gold: 450, ht: 20 },
+  { kind: 'bc', need: 1, name: 'Thám hiểm Bí Cảnh', gold: 400, ticket: 1 }
+];
+function mkReq(t){ return { kind: t.kind, type: t.type || null, need: t.need, prog: 0, name: t.name, gold: t.gold, ht: t.ht || 0, ticket: t.ticket || 0, done: false }; }
+function reqUsedKeys(){
+  var used = {};
+  S.reqOffers.concat(S.reqActive).forEach(function(r){ used[r.kind + '|' + (r.type || '')] = 1; });
+  return used;
+}
+function drawReq(){
+  var used = reqUsedKeys();
+  var pool = REQ_POOL.filter(function(t){ return !used[t.kind + '|' + (t.type || '')]; });
+  if(!pool.length) pool = REQ_POOL;
+  return mkReq(pool[Math.floor(Math.random() * pool.length)]);
+}
+function reqEnsure(){
+  if(!Array.isArray(S.reqActive)) S.reqActive = [];
+  if(S.reqDay !== dayKey()){ S.reqDay = dayKey(); S.reqOffers = []; }
+  if(!Array.isArray(S.reqOffers)) S.reqOffers = [];
+  while(S.reqOffers.length < 3) S.reqOffers.push(drawReq());
+}
+function reqDesc(r){
+  if(r.kind === 'kill') return 'Tiêu diệt ' + r.type + ' — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  if(r.kind === 'killAny') return 'Tiêu diệt quái bất kỳ — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  if(r.kind === 'ht') return 'Thu thập Huyền Thiết — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  if(r.kind === 'mine') return 'Đào mỏ thành công — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  if(r.kind === 'elite') return 'Hạ quái tinh anh / boss — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  if(r.kind === 'bc') return 'Hoàn thành 1 lượt Bí Cảnh — ' + Math.min(r.prog, r.need) + '/' + r.need;
+  return r.name;
+}
+function reqRewText(r){ return '🎁 ' + r.gold + ' vàng' + (r.ht ? ' + ' + r.ht + ' Huyền Thiết' : '') + (r.ticket ? ' + ' + r.ticket + ' Vé Triệu Hồi' : ''); }
+function reqProg(kind, type, n){
+  if(!S.reqActive) return;
+  var changed = false;
+  S.reqActive.forEach(function(r){
+    if(r.prog >= r.need) return;
+    var match = (r.kind === kind) && (kind !== 'kill' || r.type === type);
+    if(match){ r.prog = Math.min(r.need, r.prog + n); changed = true;
+      if(r.prog >= r.need && !r.done){ r.done = true; logLoot('📋 Ủy thác hoàn thành: ' + r.name + ' — mở 📋 Ủy Thác để nhận thưởng'); toast('📋 Xong ủy thác: ' + r.name); } }
+  });
+  if(changed && document.getElementById('reqPanel').style.display === 'block') renderReq();
+}
+function acceptReq(i){
+  reqEnsure();
+  if(S.reqActive.length >= 3){ toast('Chỉ nhận tối đa 3 ủy thác cùng lúc'); return; }
+  var r = S.reqOffers[i]; if(!r) return;
+  S.reqActive.push(r); S.reqOffers.splice(i, 1); S.reqOffers.push(drawReq());
+  toast('📋 Đã nhận ủy thác: ' + r.name); beep(660, 0.1);
+  renderReq(); saveGame(true);
+}
+function claimReq(i){
+  var r = S.reqActive[i]; if(!r || r.prog < r.need) return;
+  S.gold += r.gold; if(r.ht) S.ht += r.ht; if(r.ticket) S.tickets += r.ticket;
+  S.reqActive.splice(i, 1);
+  toast('🎁 Nhận thưởng ủy thác: ' + r.name); beep(820, 0.15);
+  updHud(); renderReq(); saveGame(true);
+}
+function dropReq(i){ S.reqActive.splice(i, 1); renderReq(); saveGame(true); }
+function renderReq(){
+  reqEnsure();
+  document.getElementById('reqOffers').innerHTML = S.reqOffers.map(function(r, i){
+    return '<div class="slotRow"><span><b>' + r.name + '</b><br><span style="color:#adb5bd">' + reqDesc({ kind: r.kind, type: r.type, need: r.need, prog: 0 }) + '</span><br>' + reqRewText(r) + '</span><button data-req-accept="' + i + '">Nhận</button></div>';
+  }).join('');
+  document.getElementById('reqActive').innerHTML = S.reqActive.length ? S.reqActive.map(function(r, i){
+    var done = r.prog >= r.need;
+    return '<div class="slotRow"><span><b>' + r.name + '</b><br><span style="color:#adb5bd">' + reqDesc(r) + '</span><br>' + reqRewText(r) + '</span><span><button data-req-claim="' + i + '"' + (done ? '' : ' disabled') + '>Nhận thưởng</button> <button data-req-drop="' + i + '">Huỷ</button></span></div>';
+  }).join('') : '<div style="color:#adb5bd">Chưa nhận ủy thác nào — chọn 1 việc ở bảng trên.</div>';
+}
+
+/* ================= BOSS BAI THEO GIO ================= */
+var bossRef = null, bossCycle = -1, bossLineTxt = '';
+var BOSS_PERIOD = 900, BOSS_WINDOW = 360;
+function bossSpawn(){
+  if(bossRef && !bossRef.dead) return;
+  var base = MTYPES['Lang Yêu']; var cfg = {};
+  Object.keys(base).forEach(function(k){ cfg[k] = base[k]; });
+  cfg.lvl = 12; cfg.hp = 1700; cfg.atk = 26; cfg.def = 10; cfg.xp = 800; cfg.gold = [200, 320]; cfg.ht = [30, 50]; cfg.scale = 2.4; cfg.elite = true; cfg.color = 0x30324a; cfg.speed = 4.2;
+  var b = makeMonster('Lang Yêu', -84, -84, cfg);
+  b.boss = true; b.noRespawn = true; b.dispName = '🐺 Hắc Lang Vương'; bossRef = b;
+  toast('🐺 HẮC LANG VƯƠNG xuất hiện ở Rừng Thanh Lam!');
+  logLoot('🐺 Boss bãi Hắc Lang Vương đã xuất hiện sâu trong Rừng Thanh Lam — hạ nó trong 6 phút để nhận Vé Triệu Hồi + trang bị bậc 5–6!');
+  beep(196, 0.4);
+}
+function fmtClock(sec){ return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+function bossTick(){
+  var now = Math.floor(Date.now() / 1000);
+  var cyc = Math.floor(now / BOSS_PERIOD), phase = now % BOSS_PERIOD;
+  var txt;
+  if(phase < BOSS_WINDOW){
+    if(bossCycle !== cyc && S.started){ bossCycle = cyc; bossSpawn(); }
+    if(bossRef && !bossRef.dead) txt = '🐺 BOSS ở Rừng Thanh Lam · rút lui sau ' + fmtClock(BOSS_WINDOW - phase);
+    else if(bossRef && bossRef.dead) txt = '⏳ Boss bãi sau ' + fmtClock(BOSS_PERIOD - phase);
+    else txt = '🐺 Boss đang ở Rừng Thanh Lam!';
+  } else {
+    if(bossRef && !bossRef.dead){
+      scene.remove(bossRef.group); var ix = monsters.indexOf(bossRef); if(ix >= 0) monsters.splice(ix, 1);
+      if(target === bossRef) setTarget(null); bossRef = null;
+      logLoot('🐺 Hắc Lang Vương đã rút lui — hẹn chu kỳ sau (15 phút/lần)');
+    }
+    txt = '⏳ Boss bãi sau ' + fmtClock(BOSS_PERIOD - phase);
+  }
+  if(txt !== bossLineTxt){ bossLineTxt = txt; var el = document.getElementById('bossLine'); if(el) el.textContent = txt; }
 }
 
 /* ================= PANELS: EQUIP / DAILY / IO ================= */
@@ -1332,16 +1472,24 @@ function renderDaily(){
 }
 function togglePanel(id){
   var p = document.getElementById(id); var show = p.style.display !== 'block';
-  ['equipPanel','dailyPanel','ncPanel','spiritPanel'].forEach(function(x){ document.getElementById(x).style.display = 'none'; });
+  ['equipPanel','dailyPanel','ncPanel','spiritPanel','reqPanel'].forEach(function(x){ document.getElementById(x).style.display = 'none'; });
   if(show){ p.style.display = 'block';
     if(id === 'equipPanel') renderEquip(); else if(id === 'dailyPanel') renderDaily();
     else if(id === 'ncPanel') renderNC(); else if(id === 'spiritPanel') renderSpirits();
+    else if(id === 'reqPanel') renderReq();
   }
 }
 function bindPanels(){
   document.getElementById('equipBtn').addEventListener('click', function(){ togglePanel('equipPanel'); });
   document.getElementById('dailyBtn').addEventListener('click', function(){ togglePanel('dailyPanel'); });
   document.getElementById('ncBtn').addEventListener('click', function(){ togglePanel('ncPanel'); });
+  document.getElementById('reqBtn').addEventListener('click', function(){ togglePanel('reqPanel'); });
+  document.getElementById('reqPanel').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    if(b.hasAttribute('data-req-accept')) acceptReq(parseInt(b.getAttribute('data-req-accept'), 10));
+    else if(b.hasAttribute('data-req-claim')) claimReq(parseInt(b.getAttribute('data-req-claim'), 10));
+    else if(b.hasAttribute('data-req-drop')) dropReq(parseInt(b.getAttribute('data-req-drop'), 10));
+  });
   document.getElementById('spiritBtn').addEventListener('click', function(){ togglePanel('spiritPanel'); });
   document.getElementById('bcBtn').addEventListener('click', function(){ if(S.inRealm) exitRealm(); else enterRealm(); });
   document.getElementById('ncList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b && !b.disabled) trainNC(b.getAttribute('data-nc')); });
@@ -1411,13 +1559,14 @@ document.getElementById('playBtn').addEventListener('click', function(){
   if(saveExisted && chosen !== S.cls){
     if(!confirm('Đã có nhân vật ' + cls().name + ' (cấp ' + S.lvl + '). Tạo nhân vật ' + CLASSES[chosen].name + ' mới sẽ XOÁ tiến trình cũ. Tiếp tục?')) return;
     try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
-    S.cls = chosen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; skillCd = { s1: 0, s2: 0, ult: 0 };
+    S.cls = chosen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; S.reqOffers = []; S.reqActive = []; S.reqDay = ''; skillCd = { s1: 0, s2: 0, ult: 0 };
     hp = maxHp(); mp = maxMp(); saveExisted = false;
   } else if(!saveExisted){
     S.cls = chosen; S.equip = starterEquip(); dailyReset(); hp = maxHp(); mp = maxMp();
   }
   makePlayer();
   rebuildPet();
+  reqEnsure();
   setupClassUI();
   document.getElementById('startScr').style.display = 'none';
   document.getElementById('hud').style.display = 'block';

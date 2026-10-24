@@ -1,11 +1,16 @@
-# Huyền Kiếm Online — bản V1.5 (chơi thử)
+# Huyền Kiếm Online — bản V1.6 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-## Mới trong V1.5 (bám sát hệ thống MIR4)
+## Mới trong V1.6
+- **📋 Ủy Thác**: bảng việc phụ trong thành — nhận tối đa 3 việc cùng lúc (diệt quái, thu Huyền Thiết, đào mỏ, diệt tinh anh, thám hiểm Bí Cảnh…), xong nhận vàng / Huyền Thiết / Vé Triệu Hồi; bảng bổ sung việc mới liên tục, làm mới mỗi ngày
+- **🐺 Boss bãi theo giờ**: Hắc Lang Vương xuất hiện sâu trong Rừng Thanh Lam theo chu kỳ 15 phút, ở lại 6 phút — hạ boss được Vé Triệu Hồi + trang bị bậc 5–6; góc phải màn hình luôn hiện đếm ngược boss
+- Giao diện điện thoại đã căn lại: không còn phần tử đè chồng nhau (cả dọc lẫn ngang)
+
+## Từ V1.5 (bám sát hệ thống MIR4)
 - **🧘 Nội Công**: mỗi cấp nhận 1 điểm tu luyện 6 mạch (Sinh Lực / Công Kích / Hộ Thể / Nội Tức / Bạo Kích / Thần Hành), mỗi mạch 5 tầng
 - **🐾 Linh Thú**: triệu hồi bằng vàng hoặc Vé Triệu Hồi — 9 linh thú, 4 phẩm (Thường → Truyền thuyết), trùng thì tăng sao; trang bị tối đa 3, linh thú đầu tiên bay theo nhân vật
 - **🌀 Bí Cảnh**: đấu trường riêng 5 đợt quái + trùm Thủ Lĩnh Bí Cảnh, mở từ cấp 5, 2 lượt/ngày — thắng nhận Vé Triệu Hồi + trang bị
