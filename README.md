@@ -1,28 +1,20 @@
-# ⚔️ Huyền Kiếm Online — Greybox v0.1
+# Huyền Kiếm Online — bản V1 (chơi thử)
 
-Game 3D kiếm hiệp chơi trên web, lấy cảm hứng từ dòng game Mir. Đây là **bản Greybox (giai đoạn 0)** — hình khối đơn giản để kiểm tra gameplay trước khi làm đồ hoạ chính thức.
+Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
+**https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-**https://ckhap26.github.io/** — mở link là chơi, không cần cài đặt (PC & điện thoại).
+## Có gì trong V1
+- **3 phái chơi được**: 🗡️ Kiếm Tông (cận chiến, dash + choáng), 🔮 Linh Pháp (đánh xa, sét lan, làm chậm), 🌿 Dược Sư (hồi máu, độc theo thời gian)
+- **Trang bị & cường hoá**: 4 ô đồ (vũ khí / áo / mũ / giày), quái rơi đồ vào túi, cường hoá +0 → +15 bằng vàng + Huyền Thiết (có tỉ lệ, mốc cao thất bại tụt 1 cấp)
+- **Nhiệm vụ**: chuỗi chính 8 nhiệm vụ (Chương 1–2) với 2 boss tinh anh Trại Chủ & Chúa Mỏ + nhiệm vụ ngày có thưởng
+- Đào mỏ Huyền Thiết, nút AUTO tự đánh quái, lưu tự động trên máy
+- **Xuất / Nhập dữ liệu**: trong panel 🎒 Trang bị — xuất mã lưu để chuyển nhân vật sang máy khác
 
-## Cách chơi
+## Điều khiển
+- Máy tính: W A S D / phím mũi tên di chuyển · Space đánh thường · 1/2/3 dùng kỹ năng · M đào mỏ · F nhặt đồ
+- Điện thoại: joystick ảo bên trái, các nút kỹ năng bên phải
 
-- **PC:** WASD di chuyển · kéo chuột xoay camera · Space / nút ⚔️ đánh · phím 1/2/3 dùng skill · F đào mỏ · bấm khung Nhiệm vụ để tự chạy tới bãi quái
-- **Điện thoại:** joystick bên trái · vuốt nửa phải màn hình xoay camera · nút skill bên phải
-- **AUTO:** bấm nút AUTO — nhân vật tự chạy đến khu nhiệm vụ, tự đánh quái, dùng Xoáy Kiếm, tự nhặt đồ
-
-## Nội dung bản này
-
-- Phái **Kiếm Tông**: Trảm thường, Xoáy Kiếm (diện rộng), Phá Sơn Kích (lao + choáng), Thiên Kiếm Giáng (mở cấp 3)
-- 1 map liền: **Thành Thiên Vân** → **Rừng Thanh Lam** → **Mỏ Huyền Thạch** (đào Huyền Thiết)
-- 3 loại quái: Sơn Tặc, Lang Yêu, Thạch Nhân — chuỗi 3 nhiệm vụ + vòng tuần tra
-- Lên cấp, rơi vàng/Huyền Thiết, bình máu, minimap, tiến trình tự lưu trên máy người chơi
-
-## Báo lỗi / góp ý
-
-Chơi thử thấy lỗi hoặc có ý tưởng, hãy mở **Issues** trong repo này và mô tả: đang làm gì thì lỗi, máy/điện thoại + trình duyệt gì, chụp màn hình nếu được.
-
-## Lộ trình
-
-Greybox (hiện tại) → V1: 3 phái, 3 map, cường hoá trang bị → V1.5: nội công/linh thú/bí cảnh → V2: chơi online nhiều người, bang hội, PvP, boss thế giới.
+## Báo lỗi
+Gặp lỗi hoặc có góp ý, hãy mở **Issues** của repo này và mô tả: đang chơi phái nào, làm gì thì lỗi, chụp màn hình nếu được. Cảm ơn bạn đã test!
