@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Huyền Kiếm Online — Greybox Giai đoạn 0</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;overflow:hidden;background:#0b1020;font-family:'Segoe UI',system-ui,sans-serif;color:#fff;touch-action:none}
+  #game{position:fixed;inset:0}
+  canvas{display:block}
+  /* ---------- HUD ---------- */
+  #hud{position:fixed;inset:0;pointer-events:none;display:none;z-index:5}
+  #topLeft{position:absolute;top:10px;left:10px;width:230px}
+  .portrait{display:flex;gap:8px;align-items:center}
+  .avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#3b6ea5,#1d3557);border:2px solid #ffd166;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+  .bars{flex:1}
+  .barRow{position:relative;height:16px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.35);border-radius:8px;margin-bottom:4px;overflow:hidden}
+  .barFill{height:100%;transition:width .18s}
+  #hpFill{background:linear-gradient(90deg,#e63946,#ff758f);width:100%}
+  #mpFill{background:linear-gradient(90deg,#4361ee,#4cc9f0);width:100%}
+  .barTxt{position:absolute;inset:0;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;text-shadow:0 1px 2px #000}
+  #lvlLine{font-size:12px;font-weight:700;text-shadow:0 1px 3px #000;margin-top:2px}
+  #lvlLine b{color:#ffd166}
+  #moneyLine{font-size:12px;text-shadow:0 1px 3px #000;margin-top:1px}
+  #xpWrap{position:absolute;left:0;right:0;bottom:0;height:8px;background:rgba(0,0,0,.6);z-index:6}
+  #xpFill{height:100%;background:linear-gradient(90deg,#ffd166,#f77f00);width:0%}
+  #xpTxt{position:absolute;right:8px;bottom:10px;font-size:11px;text-shadow:0 1px 2px #000}
+  /* Quest */
+  #questBox{position:absolute;top:118px;left:10px;width:225px;background:rgba(10,15,30,.62);border:1px solid rgba(255,209,102,.5);border-radius:10px;padding:8px 10px;pointer-events:auto;cursor:pointer}
+  #questBox h4{font-size:12px;color:#ffd166;margin-bottom:3px}
+  #questBox p{font-size:12px;line-height:1.45}
+  #questBox .prog{color:#8ecae6;font-weight:700}
+  /* Top right */
+  #topRight{position:absolute;top:10px;right:10px;text-align:center}
+  #minimap{background:rgba(0,0,0,.5);border:2px solid rgba(255,255,255,.35);border-radius:50%}
+  #fps{font-size:11px;margin-top:3px;text-shadow:0 1px 2px #000}
+  #zoneName{font-size:12px;font-weight:700;color:#ffd166;text-shadow:0 1px 3px #000;margin-top:2px}
+  .miniBtns{margin-top:5px;display:flex;gap:5px;justify-content:center;pointer-events:auto}
+  .miniBtns button{background:rgba(10,15,30,.75);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:5px 8px;font-size:11px;cursor:pointer}
+  /* Boss / target */
+  #targetBox{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:280px;text-align:center;display:none}
+  #targetBox .nm{font-size:13px;font-weight:800;text-shadow:0 1px 3px #000;margin-bottom:3px}
+  #targetBox .barRow{height:13px}
+  #tHpFill{background:linear-gradient(90deg,#9d0208,#e5383b);width:100%}
+  /* Skills */
+  #skillBar{position:absolute;right:12px;bottom:26px;display:flex;gap:9px;align-items:flex-end;pointer-events:auto}
+  .skBtn{position:relative;width:58px;height:58px;border-radius:50%;border:2px solid rgba(255,255,255,.65);background:rgba(15,20,40,.78);color:#fff;font-size:21px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .skBtn small{font-size:8.5px;font-weight:700;margin-top:1px}
+  .skBtn .cd{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;font-size:16px;font-weight:800}
+  #atkBtn{width:74px;height:74px;font-size:27px;border-color:#ffd166;background:rgba(90,40,10,.85)}
+  #autoBtn{position:absolute;right:16px;bottom:112px;width:62px;height:34px;border-radius:17px;border:2px solid rgba(255,255,255,.5);background:rgba(15,20,40,.8);color:#adb5bd;font-weight:800;font-size:13px;cursor:pointer;pointer-events:auto}
+  #autoBtn.on{background:#2a9d8f;color:#fff;border-color:#2a9d8f;box-shadow:0 0 14px #2a9d8f}
+  #actBtns{position:absolute;right:16px;bottom:160px;display:flex;gap:8px;pointer-events:auto}
+  .actBtn{width:52px;height:52px;border-radius:50%;border:2px solid rgba(255,255,255,.5);background:rgba(15,20,40,.78);color:#fff;font-size:19px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .actBtn small{font-size:8px;font-weight:700}
+  /* Joystick */
+  #joyBase{position:absolute;left:22px;bottom:34px;width:124px;height:124px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);pointer-events:auto;display:none}
+  #joyStick{position:absolute;left:37px;top:37px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.35);border:2px solid rgba(255,255,255,.6)}
+  @media (pointer:coarse){ #joyBase{display:block} }
+  /* Log / floats */
+  #lootLog{position:absolute;left:12px;bottom:120px;font-size:12px;line-height:1.55;text-shadow:0 1px 2px #000;max-height:130px;overflow:hidden}
+  .dmgNum{position:absolute;font-weight:900;pointer-events:none;text-shadow:0 2px 3px #000;animation:floatUp .8s ease-out forwards;z-index:7}
+  @keyframes floatUp{from{transform:translate(-50%,0);opacity:1}to{transform:translate(-50%,-56px);opacity:0}}
+  #toast{position:absolute;top:22%;left:50%;transform:translateX(-50%);font-size:26px;font-weight:900;color:#ffd166;text-shadow:0 2px 10px #000,0 0 26px rgba(255,209,102,.7);opacity:0;transition:opacity .3s;text-align:center;white-space:nowrap}
+  #mineProg{position:absolute;bottom:190px;left:50%;transform:translateX(-50%);width:220px;display:none;text-align:center;font-size:12px;font-weight:700}
+  #mineProg .barRow{height:12px}
+  #mineFill{background:linear-gradient(90deg,#b5179e,#7209b7);width:0%}
+  /* ---------- Start screen ---------- */
+  #startScr{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 35%,#274060 0%,#10182e 55%,#070b18 100%);text-align:center;padding:20px}
+  #startScr h1{font-size:clamp(32px,7vw,54px);letter-spacing:2px;color:#ffd166;text-shadow:0 3px 18px rgba(255,209,102,.45)}
+  #startScr h2{font-size:clamp(13px,2.6vw,17px);color:#8ecae6;font-weight:600;margin-top:4px}
+  .classCard{margin-top:22px;background:rgba(255,255,255,.06);border:2px solid #ffd166;border-radius:14px;padding:14px 18px;max-width:420px}
+  .classCard h3{color:#ffd166;font-size:19px}
+  .classCard p{font-size:13px;line-height:1.55;color:#dee2e6;margin-top:5px}
+  #playBtn{margin-top:24px;background:linear-gradient(180deg,#f77f00,#d62828);border:none;color:#fff;font-size:20px;font-weight:900;padding:14px 52px;border-radius:30px;cursor:pointer;box-shadow:0 6px 24px rgba(214,40,40,.5);letter-spacing:1px}
+  #playBtn:active{transform:scale(.97)}
+  .helpTxt{margin-top:18px;font-size:12.5px;color:#adb5bd;line-height:1.7;max-width:460px}
+  .helpTxt b{color:#e9ecef}
+  #resetSave{margin-top:10px;background:none;border:none;color:#6c757d;font-size:11px;cursor:pointer;text-decoration:underline}
+  #verTag{position:absolute;bottom:10px;font-size:11px;color:#495057}
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<div id="startScr">
+  <h1>⚔️ HUYỀN KIẾM ONLINE</h1>
+  <h2>GREYBOX — Giai đoạn 0 · Bản khung chơi thử gameplay</h2>
+  <div class="classCard">
+    <h3>🗡️ Kiếm Tông — Đệ tử nhập môn</h3>
+    <p>Phái cận chiến: máu dày, thủ cao. Skill: <b>Xoáy Kiếm</b> (diện rộng) · <b>Phá Sơn Kích</b> (lao tới + choáng) · <b>Thiên Kiếm Giáng</b> (tuyệt kỹ, mở ở cấp 3 trong bản Greybox)</p>
+  </div>
+  <button id="playBtn">▶ VÀO GAME</button>
+  <div class="helpTxt">
+    <b>PC:</b> WASD di chuyển · giữ chuột phải / kéo để xoay camera · Space hoặc nút ⚔️ đánh · 1/2/3 dùng skill · F đào mỏ · bấm nút AUTO để tự đánh<br>
+    <b>Điện thoại:</b> joystick trái di chuyển · kéo nửa phải màn hình xoay camera · các nút skill bên phải
+  </div>
+  <button id="resetSave">Xoá dữ liệu lưu &amp; chơi lại từ đầu</button>
+  <div id="verTag">Greybox v0.1 — hình khối thử nghiệm, chưa phải đồ hoạ chính thức · Tiến trình tự lưu trên máy này</div>
+</div>
+
+<div id="hud">
+  <div id="topLeft">
+    <div class="portrait">
+      <div class="avatar">🗡️</div>
+      <div class="bars">
+        <div class="barRow"><div class="barFill" id="hpFill"></div><div class="barTxt" id="hpTxt"></div></div>
+        <div class="barRow"><div class="barFill" id="mpFill"></div><div class="barTxt" id="mpTxt"></div></div>
+      </div>
+    </div>
+    <div id="lvlLine"></div>
+    <div id="moneyLine"></div>
+  </div>
+
+  <div id="questBox">
+    <h4>📜 NHIỆM VỤ (bấm để tự chạy)</h4>
+    <p id="questTxt"></p>
+  </div>
+
+  <div id="targetBox">
+    <div class="nm" id="tName"></div>
+    <div class="barRow"><div class="barFill" id="tHpFill"></div></div>
+  </div>
+
+  <div id="topRight">
+    <canvas id="minimap" width="120" height="120"></canvas>
+    <div id="zoneName">Thành Thiên Vân</div>
+    <div id="fps">FPS: --</div>
+    <div class="miniBtns">
+      <button id="saveBtn">💾 Lưu</button>
+      <button id="soundBtn">🔊</button>
+    </div>
+  </div>
+
+  <div id="lootLog"></div>
+  <div id="toast"></div>
+
+  <div id="mineProg">⛏️ Đang đào Huyền Thiết…<div class="barRow"><div class="barFill" id="mineFill"></div></div></div>
+
+  <button id="autoBtn">AUTO</button>
+  <div id="actBtns">
+    <button class="actBtn" id="mineBtn">⛏️<small>ĐÀO MỎ</small></button>
+    <button class="actBtn" id="potBtn">🧪<small id="potCnt">×5</small></button>
+  </div>
+  <div id="skillBar">
+    <button class="skBtn" id="sk1">🌀<small>XOÁY KIẾM</small><span class="cd"></span></button>
+    <button class="skBtn" id="sk2">💥<small>PHÁ SƠN</small><span class="cd"></span></button>
+    <button class="skBtn" id="sk3">🌩️<small>THIÊN KIẾM</small><span class="cd"></span></button>
+    <button class="skBtn" id="atkBtn">⚔️</button>
+  </div>
+
+  <div id="joyBase"><div id="joyStick"></div></div>
+  <div id="xpWrap"><div id="xpFill"></div></div>
+  <div id="xpTxt"></div>
+</div>
+
+<script src="assets/three.min.js"></script>
+<script>
+'use strict';
+/* ================= CONFIG (số liệu để trong cấu hình — GDD Mục 0.6) ================= */
+var CFG = {
+  dmgDefFactor: 0.6, dmgMinRatio: 0.10, critRate: 0.05, critMult: 1.6,
+  xpCurveBase: 100, xpCurvePow: 1.6,
+  skills: {
+    basic: { cd: 0.8, coeff: 1.0, mp: 0 },
+    spin:  { cd: 8,  coeff: 1.8, mp: 15, radius: 4.2 },
+    dash:  { cd: 15, coeff: 2.2, mp: 20, range: 11 },
+    ult:   { cd: 45, coeff: 3.5, mp: 40, radius: 6, unlockLvl: 3 }
+  }
+};
+function xpNeed(lvl){ return Math.round(CFG.xpCurveBase * Math.pow(lvl, CFG.xpCurvePow)); }
+
+/* ================= STATE ================= */
+var S = {
+  lvl: 1, xp: 0, gold: 0, ht: 0, potions: 5,
+  baseAtk: 22, baseDef: 10, baseHp: 220, baseMp: 80,
+  questIdx: 0, questProg: 0, started: false, auto: false, sound: true
+};
+function maxHp(){ return Math.round(S.baseHp + (S.lvl-1)*36); }
+function maxMp(){ return Math.round(S.baseMp + (S.lvl-1)*9); }
+function atk(){ return Math.round(S.baseAtk + (S.lvl-1)*5); }
+function def(){ return Math.round(S.baseDef + (S.lvl-1)*2); }
+function power(){ return Math.round(atk()*10 + def()*8 + maxHp()/5 + maxMp()/10); }
+var hp = 220, mp = 80;
+
+var QUESTS = [
+  { name: 'Trừ hại Rừng Thanh Lam', desc: 'Tiêu diệt Sơn Tặc ở Rừng Thanh Lam (phía Tây Bắc)', type: 'Sơn Tặc', need: 5, x: -62, z: -52, reward: '150 vàng' },
+  { name: 'Bầy Lang Yêu quấy phá', desc: 'Tiêu diệt Lang Yêu ở sâu trong Rừng Thanh Lam', type: 'Lang Yêu', need: 4, x: -82, z: -78, reward: '250 vàng + 20 Huyền Thiết' },
+  { name: 'Thạch Nhân canh mỏ', desc: 'Tiêu diệt Thạch Nhân ở Mỏ Huyền Thạch (phía Đông Bắc)', type: 'Thạch Nhân', need: 3, x: 74, z: -70, reward: '400 vàng + 50 Huyền Thiết' },
+  { name: 'Tuần tra tự do', desc: 'Tự do cày cấp, đào Huyền Thiết ở Mỏ (Đông Bắc) — cứ 10 quái hạ được nhận thưởng vòng lặp', type: '*', need: 10, x: 40, z: -50, reward: '200 vàng mỗi vòng' }
+];
+
+/* ================= SAVE / LOAD ================= */
+var SAVE_KEY = 'huyenKiemGreybox_v1';
+function saveGame(silent){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ lvl:S.lvl, xp:S.xp, gold:S.gold, ht:S.ht, potions:S.potions, questIdx:S.questIdx, questProg:S.questProg })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
+}
+function loadGame(){
+  try{ var d = JSON.parse(localStorage.getItem(SAVE_KEY)); if(!d) return;
+    S.lvl=d.lvl||1; S.xp=d.xp||0; S.gold=d.gold||0; S.ht=d.ht||0; S.potions=(d.potions==null?5:d.potions); S.questIdx=Math.min(d.questIdx||0, QUESTS.length-1); S.questProg=d.questProg||0;
+    hp = maxHp(); mp = maxMp();
+  }catch(e){}
+}
+
+/* ================= THREE SETUP ================= */
+var scene, camera, renderer, clock;
+var player, swordPivot, monsters = [], loots = [], mineNodes = [], colliders = [];
+var camYaw = 0, camPitch = 0.62, camDist = 13;
+var keys = {}, joyVec = {x:0,y:0};
+var target = null, lastAtk = 0, skillCd = { spin:0, dash:0, ult:0 };
+var mining = null, autoTargetPos = null, swingT = 0, playerAtkAnim = 0;
+var zoneEl, fpsFrames = 0, fpsTime = 0;
+
+function mat(c){ return new THREE.MeshLambertMaterial({ color: c }); }
+function box(w,h,d,c,x,y,z,parent){
+  var m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat(c));
+  m.position.set(x||0,y||0,z||0); (parent||scene).add(m); return m;
+}
+function cyl(rt,rb,h,c,x,y,z,parent,seg){
+  var m = new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg||10), mat(c));
+  m.position.set(x||0,y||0,z||0); (parent||scene).add(m); return m;
+}
+
+function buildWorld(){
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x87b5d9);
+  scene.fog = new THREE.Fog(0x87b5d9, 60, 190);
+  camera = new THREE.PerspectiveCamera(58, innerWidth/innerHeight, 0.1, 400);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  document.getElementById('game').appendChild(renderer.domElement);
+  clock = new THREE.Clock();
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+  var sun = new THREE.DirectionalLight(0xfff2cc, 0.85); sun.position.set(50, 80, 30); scene.add(sun);
+
+  // Ground base
+  var ground = new THREE.Mesh(new THREE.PlaneGeometry(260, 260), mat(0x6aa84f));
+  ground.rotation.x = -Math.PI/2; scene.add(ground);
+  // City stone floor (south)
+  var city = new THREE.Mesh(new THREE.PlaneGeometry(86, 70), mat(0x9a958c));
+  city.rotation.x = -Math.PI/2; city.position.set(0, 0.02, 62); scene.add(city);
+  // Forest floor tint (north-west)
+  var forest = new THREE.Mesh(new THREE.PlaneGeometry(105, 105), mat(0x4e7a3a));
+  forest.rotation.x = -Math.PI/2; forest.position.set(-72, 0.015, -68); scene.add(forest);
+  // Mine floor tint (north-east)
+  var mine = new THREE.Mesh(new THREE.PlaneGeometry(105, 105), mat(0x5d564e));
+  mine.rotation.x = -Math.PI/2; mine.position.set(74, 0.015, -68); scene.add(mine);
+
+  // City buildings (greybox blocks + roofs)
+  var bpos = [[-30,44],[30,44],[-36,70],[36,70],[-20,86],[20,86],[0,38],[-38,56],[38,56]];
+  bpos.forEach(function(p){
+    box(11, 9, 10, 0xd9c9a3, p[0], 4.5, p[1]);
+    var roof = new THREE.Mesh(new THREE.ConeGeometry(8.6, 4, 4), mat(0x8d3b2f));
+    roof.position.set(p[0], 11, p[1]); roof.rotation.y = Math.PI/4; scene.add(roof);
+    colliders.push({x:p[0], z:p[1], r:8});
+  });
+  // City gate north
+  box(3, 12, 3, 0x8a7f6a, -7, 6, 26); box(3, 12, 3, 0x8a7f6a, 7, 6, 26); box(17, 3, 4, 0x8d3b2f, 0, 13, 26);
+  // Quest NPC in city (golden block person)
+  var npc = new THREE.Group(); npc.position.set(5, 0, 52); scene.add(npc);
+  cyl(0.55, 0.7, 1.7, 0xf2c14e, 0, 0.85, 0, npc);
+  var nh = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 10), mat(0xf1c27d)); nh.position.y = 2.05; npc.add(nh);
+  var sign = box(0.18, 1.6, 0.18, 0x795548, 1.1, 0.8, 0, npc); box(1.5, 0.8, 0.1, 0xffd166, 1.1, 1.9, 0, npc);
+  colliders.push({x:5, z:52, r:1.4});
+  // Lanterns
+  [[-12,58],[12,58],[-12,76],[12,76]].forEach(function(p){ cyl(0.09,0.09,3.4,0x5d4037,p[0],1.7,p[1]); box(0.7,0.9,0.7,0xffb703,p[0],3.6,p[1]); colliders.push({x:p[0],z:p[1],r:0.6}); });
+
+  // Forest trees
+  for(var i=0;i<46;i++){
+    var tx = -120 + Math.random()*96, tz = -118 + Math.random()*96;
+    if(Math.abs(tx+62)<9 && Math.abs(tz+52)<9) continue;
+    cyl(0.35, 0.5, 2.6, 0x6d4c41, tx, 1.3, tz);
+    var crown = new THREE.Mesh(new THREE.ConeGeometry(2.4+Math.random(), 5.5, 7), mat(0x2e6b30));
+    crown.position.set(tx, 5.4, tz); scene.add(crown);
+    if(i%3===0) colliders.push({x:tx, z:tz, r:0.8});
+  }
+  // Mine rocks + crystal mining nodes
+  for(var j=0;j<26;j++){
+    var rx = 30 + Math.random()*92, rz = -118 + Math.random()*96;
+    var rk = new THREE.Mesh(new THREE.DodecahedronGeometry(1+Math.random()*1.6), mat(0x757575));
+    rk.position.set(rx, 0.8, rz); rk.rotation.set(Math.random(), Math.random(), Math.random()); scene.add(rk);
+  }
+  var nodeSpots = [[58,-52],[70,-64],[84,-58],[64,-84],[90,-84],[76,-40]];
+  nodeSpots.forEach(function(p){ makeMineNode(p[0], p[1]); });
+  // Boundary fences (visual)
+  for(var bx=-126; bx<=126; bx+=12){ box(10,1.6,0.6,0x795548,bx,0.8,-126); box(10,1.6,0.6,0x795548,bx,0.8,126); }
+}
+
+function makeMineNode(x, z){
+  var g = new THREE.Group(); g.position.set(x, 0, z); scene.add(g);
+  var rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1.5), mat(0x616161)); rock.position.y = 0.7; g.add(rock);
+  var crys = [];
+  for(var i=0;i<3;i++){
+    var c = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), new THREE.MeshLambertMaterial({ color: 0xc77dff, emissive: 0x5a189a }));
+    c.position.set((i-1)*0.7, 1.6 + (i===1?0.5:0), (i%2?0.4:-0.3)); c.rotation.z = (i-1)*0.4; g.add(c); crys.push(c);
+  }
+  mineNodes.push({ x:x, z:z, group:g, crys:crys, amount: 5, respawn: 0 });
+  colliders.push({x:x, z:z, r:1.6});
+}
+
+function makePlayer(){
+  player = new THREE.Group(); scene.add(player);
+  cyl(0.52, 0.66, 1.55, 0x3b6ea5, 0, 0.95, 0, player);                    // body / armor
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 12), mat(0xf1c27d)); head.position.y = 2.05; player.add(head);
+  cyl(0.46, 0.46, 0.22, 0x22223b, 0, 2.32, 0, player);                    // hat rim
+  box(0.34, 0.5, 0.1, 0xd62828, 0, 1.28, 0.6, player);                    // chest emblem plate
+  swordPivot = new THREE.Group(); swordPivot.position.set(0.72, 1.45, 0); player.add(swordPivot);
+  box(0.09, 0.3, 0.09, 0x6d4c41, 0, -0.1, 0, swordPivot);                 // handle
+  box(0.07, 1.25, 0.16, 0xced4da, 0, 0.62, 0, swordPivot);               // blade
+  swordPivot.rotation.z = -0.5;
+  var ring = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.05, 24), new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide }));
+  ring.rotation.x = -Math.PI/2; ring.position.y = 0.03; player.add(ring);
+  player.position.set(0, 0, 66);
+}
+
+/* ================= MONSTERS ================= */
+var MTYPES = {
+  'Sơn Tặc':   { lvl: 2,  hp: 70,  atk: 9,  def: 3,  xp: 34,  gold: [6,14],  ht: 0,           color: 0x8d6e63, scale: 1.0, speed: 3.4, zones: [[-62,-52],[-50,-40],[-72,-44],[-56,-64],[-46,-56]] },
+  'Lang Yêu':  { lvl: 5,  hp: 120, atk: 14, def: 5,  xp: 58,  gold: [10,22], ht: 0,           color: 0x616a78, scale: 1.05, speed: 4.6, zones: [[-84,-76],[-76,-88],[-92,-66],[-68,-82],[-88,-94]] },
+  'Thạch Nhân':{ lvl: 10, hp: 240, atk: 20, def: 11, xp: 110, gold: [18,36], ht: [4,10],      color: 0x757575, scale: 1.45, speed: 2.6, zones: [[66,-56],[80,-72],[58,-74],[88,-48],[72,-90]] }
+};
+function makeMonster(type, sx, sz){
+  var t = MTYPES[type];
+  var g = new THREE.Group(); g.position.set(sx, 0, sz); scene.add(g);
+  var body = box(1.05*t.scale, 1.3*t.scale, 0.8*t.scale, t.color, 0, 0.95*t.scale, 0, g);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.4*t.scale, 10, 10), mat(t.color)); head.position.y = 1.95*t.scale; g.add(head);
+  var e1 = box(0.09,0.09,0.05, 0xff2222, -0.16*t.scale, 2.0*t.scale, 0.36*t.scale, g);
+  var e2 = box(0.09,0.09,0.05, 0xff2222, 0.16*t.scale, 2.0*t.scale, 0.36*t.scale, g);
+  if(type==='Thạch Nhân'){ box(1.4,0.5,1.0, 0x9e9e9e, 0, 1.85, 0, g); }
+  if(type==='Lang Yêu'){ box(0.28,0.28,1.1, t.color, 0, 0.8, -0.85, g); body.scale.y = 0.72; head.position.y = 1.55; e1.position.y=1.6; e2.position.y=1.6; }
+  // HP bar (billboard planes)
+  var barG = new THREE.Group(); barG.position.y = 2.65*t.scale; g.add(barG);
+  var bg = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.2), new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.DoubleSide }));
+  var fg = new THREE.Mesh(new THREE.PlaneGeometry(1.62, 0.13), new THREE.MeshBasicMaterial({ color: 0x51cf66, side: THREE.DoubleSide }));
+  fg.position.z = 0.005; barG.add(bg); barG.add(fg);
+  // target ring
+  var ring = new THREE.Mesh(new THREE.RingGeometry(1.0*t.scale, 1.15*t.scale, 24), new THREE.MeshBasicMaterial({ color: 0xff3333, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+  ring.rotation.x = -Math.PI/2; ring.position.y = 0.04; g.add(ring);
+  var m = { type:type, cfg:t, group:g, barG:barG, barFg:fg, ring:ring, hp:t.hp, maxHp:t.hp,
+            home:{x:sx,z:sz}, state:'idle', wanderT: Math.random()*2, atkT: 0, respawnT: 0, stun: 0, dead:false, hitFlash: 0 };
+  monsters.push(m); return m;
+}
+function spawnAllMonsters(){
+  Object.keys(MTYPES).forEach(function(type){ MTYPES[type].zones.forEach(function(z){ makeMonster(type, z[0], z[1]); }); });
+}
+
+/* ================= FX / LOOT ================= */
+function dmgNum(worldPos, txt, color, size){
+  var v = worldPos.clone().project(camera); if(v.z > 1) return;
+  var el = document.createElement('div'); el.className = 'dmgNum'; el.textContent = txt;
+  el.style.left = ((v.x*0.5+0.5)*innerWidth) + 'px'; el.style.top = ((-v.y*0.5+0.5)*innerHeight) + 'px';
+  el.style.color = color; el.style.fontSize = (size||19) + 'px';
+  document.body.appendChild(el); setTimeout(function(){ el.remove(); }, 820);
+}
+function ringFx(x, z, color, maxR){
+  var r = new THREE.Mesh(new THREE.RingGeometry(0.3, 0.5, 28), new THREE.MeshBasicMaterial({ color: color, side: THREE.DoubleSide, transparent: true }));
+  r.rotation.x = -Math.PI/2; r.position.set(x, 0.12, z); scene.add(r);
+  var t0 = performance.now();
+  (function anim(){ var k = (performance.now()-t0)/480; if(k>=1){ scene.remove(r); return; }
+    var s = 1 + k*maxR; r.scale.set(s, s, 1); r.material.opacity = 1-k; requestAnimationFrame(anim); })();
+}
+function spawnLoot(x, z, kind, amt){
+  var geo = kind==='gold' ? new THREE.SphereGeometry(0.32, 10, 10) : new THREE.OctahedronGeometry(0.36);
+  var m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: kind==='gold'?0xffd166:0xc77dff, emissive: kind==='gold'?0x664d00:0x5a189a }));
+  m.position.set(x + (Math.random()*1.6-0.8), 0.45, z + (Math.random()*1.6-0.8)); scene.add(m);
+  loots.push({ mesh:m, kind:kind, amt:amt, t: Math.random()*6 });
+}
+function logLoot(txt){
+  var box = document.getElementById('lootLog'); var d = document.createElement('div'); d.textContent = txt; box.appendChild(d);
+  while(box.children.length > 6) box.removeChild(box.firstChild);
+  setTimeout(function(){ if(d.parentNode) d.remove(); }, 7000);
+}
+var toastT = null;
+function toast(txt){
+  var el = document.getElementById('toast'); el.textContent = txt; el.style.opacity = 1;
+  clearTimeout(toastT); toastT = setTimeout(function(){ el.style.opacity = 0; }, 1900);
+}
+var AC = null;
+function beep(freq, dur){
+  if(!S.sound) return;
+  try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    var o = AC.createOscillator(), g = AC.createGain(); o.frequency.value = freq; o.type='triangle';
+    g.gain.setValueAtTime(0.08, AC.currentTime); g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + dur);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + dur);
+  }catch(e){}
+}
+
+/* ================= COMBAT ================= */
+function damageCalc(attackerAtk, coeff, targetDef){
+  var raw = attackerAtk * coeff - targetDef * CFG.dmgDefFactor;
+  var min = attackerAtk * CFG.dmgMinRatio;
+  var crit = Math.random() < CFG.critRate;
+  var dmg = Math.max(min, raw) * (crit ? CFG.critMult : 1);
+  return { dmg: Math.round(dmg * (0.92 + Math.random()*0.16)), crit: crit };
+}
+function setTarget(m){
+  if(target && target.ring) target.ring.material.opacity = 0;
+  target = m;
+  if(target){ target.ring.material.opacity = 0.95; document.getElementById('targetBox').style.display = 'block'; }
+  else document.getElementById('targetBox').style.display = 'none';
+  updTargetBar();
+}
+function updTargetBar(){
+  if(!target) return;
+  document.getElementById('tName').textContent = target.type + ' · Cấp ' + target.cfg.lvl + (target.stun>0 ? ' · 💫 Choáng' : '');
+  document.getElementById('tHpFill').style.width = Math.max(0, target.hp/target.maxHp*100) + '%';
+}
+function nearestMonster(maxDist, onlyType){
+  var best = null, bd = maxDist;
+  monsters.forEach(function(m){ if(m.dead) return; if(onlyType && m.type!==onlyType) return;
+    var d = dist2d(player.position, m.group.position); if(d < bd){ bd = d; best = m; } });
+  return best;
+}
+function hurtMonster(m, coeff, isSkill){
+  var r = damageCalc(atk(), coeff, m.cfg.def);
+  m.hp -= r.dmg; m.hitFlash = 0.12; if(m.state==='idle'||m.state==='return') m.state = 'chase';
+  dmgNum(m.group.position.clone().add(new THREE.Vector3(0, 2.6, 0)), (r.crit?'💥':'') + r.dmg, r.crit?'#ffd166':(isSkill?'#4cc9f0':'#ffffff'), r.crit?26:19);
+  beep(r.crit?520:340, 0.08); updTargetBar();
+  if(m.hp <= 0) killMonster(m);
+}
+function killMonster(m){
+  m.dead = true; m.hp = 0; m.respawnT = 22; m.group.visible = false;
+  if(target === m) setTarget(null);
+  ringFx(m.group.position.x, m.group.position.z, 0xffffff, 3);
+  // drops
+  var g = m.cfg.gold[0] + Math.round(Math.random()*(m.cfg.gold[1]-m.cfg.gold[0]));
+  spawnLoot(m.group.position.x, m.group.position.z, 'gold', g);
+  if(m.cfg.ht){ var h = m.cfg.ht[0] + Math.round(Math.random()*(m.cfg.ht[1]-m.cfg.ht[0])); spawnLoot(m.group.position.x, m.group.position.z, 'ht', h); }
+  if(Math.random() < 0.10) { S.potions++; logLoot('🧪 Nhặt được Bình Máu'); updHud(); }
+  gainXp(m.cfg.xp);
+  // quest
+  var q = QUESTS[S.questIdx];
+  if(q && (q.type === m.type || q.type === '*')){
+    S.questProg++;
+    if(S.questProg >= q.need) completeQuest(); else updQuest();
+  }
+  saveGame(true);
+}
+function gainXp(n){
+  S.xp += n;
+  while(S.xp >= xpNeed(S.lvl)){
+    S.xp -= xpNeed(S.lvl); S.lvl++;
+    hp = maxHp(); mp = maxMp();
+    ringFx(player.position.x, player.position.z, 0xffd166, 7);
+    toast('🎉 LÊN CẤP ' + S.lvl + '!');
+    logLoot('⬆️ Lên cấp ' + S.lvl + ' — Công ' + atk() + ' · Thủ ' + def() + ' · Lực chiến ' + power());
+    beep(660, 0.25);
+    if(S.lvl === CFG.skills.ult.unlockLvl) logLoot('🌩️ Đã mở tuyệt kỹ THIÊN KIẾM GIÁNG (phím 3)');
+  }
+  updHud();
+}
+function completeQuest(){
+  var q = QUESTS[S.questIdx];
+  if(S.questIdx === 0) S.gold += 150;
+  if(S.questIdx === 1){ S.gold += 250; S.ht += 20; }
+  if(S.questIdx === 2){ S.gold += 400; S.ht += 50; }
+  if(S.questIdx === 3){ S.gold += 200; S.questProg = 0; toast('🎁 Thưởng vòng tuần tra: +200 vàng'); updQuest(); updHud(); saveGame(true); return; }
+  toast('✅ Hoàn thành: ' + q.name + ' (+' + q.reward + ')');
+  logLoot('📜 Xong nhiệm vụ "' + q.name + '" — thưởng ' + q.reward);
+  S.questIdx++; S.questProg = 0; updQuest(); updHud(); saveGame(true); beep(760, 0.2);
+}
+function basicAttack(){
+  var now = performance.now()/1000; if(now - lastAtk < CFG.skills.basic.cd) return;
+  if(!target || target.dead || dist2d(player.position, target.group.position) > 3.4){
+    var nm = nearestMonster(14); if(nm) setTarget(nm);
+    if(!target || dist2d(player.position, target.group.position) > 3.4) { swingAnim(); return; }
+  }
+  lastAtk = now; faceTo(player, target.group.position); swingAnim();
+  hurtMonster(target, CFG.skills.basic.coef || CFG.skills.basic.coeff, false);
+}
+function swingAnim(){ playerAtkAnim = 0.22; }
+function useSkill(kind){
+  var sk = CFG.skills[kind]; var now = performance.now()/1000;
+  if(skillCd[kind] > 0) return;
+  if(kind === 'ult' && S.lvl < sk.unlockLvl){ toast('🔒 Thiên Kiếm mở ở cấp ' + sk.unlockLvl); return; }
+  if(mp < sk.mp){ toast('❌ Không đủ nội lực'); return; }
+  if(kind === 'dash'){
+    var t = (target && !target.dead) ? target : nearestMonster(sk.range);
+    if(!t){ toast('Không có mục tiêu trong tầm lao'); return; }
+    setTarget(t);
+    var dx = t.group.position.x - player.position.x, dz = t.group.position.z - player.position.z;
+    var d = Math.sqrt(dx*dx+dz*dz) || 1;
+    player.position.x = t.group.position.x - dx/d*2.2; player.position.z = t.group.position.z - dz/d*2.2;
+    faceTo(player, t.group.position); swingAnim();
+    mp -= sk.mp; skillCd[kind] = sk.cd; hurtMonster(t, sk.coeff, true); t.stun = 1.2;
+    ringFx(t.group.position.x, t.group.position.z, 0xffa94d, 2.5); updTargetBar();
+  } else {
+    mp -= sk.mp; skillCd[kind] = sk.cd; swingAnim();
+    var center = (kind==='ult' && target && !target.dead) ? target.group.position : player.position;
+    ringFx(center.x, center.z, kind==='ult'?0xffd166:0x4cc9f0, sk.radius*1.6);
+    if(kind==='ult') beep(180, 0.35);
+    monsters.forEach(function(m){ if(!m.dead && dist2d(center, m.group.position) <= sk.radius) hurtMonster(m, sk.coeff, true); });
+  }
+  updHud();
+}
+
+/* ================= MINING ================= */
+function nearMineNode(){
+  var best = null, bd = 4.2;
+  mineNodes.forEach(function(n){ if(n.amount<=0) return; var d = Math.hypot(player.position.x-n.x, player.position.z-n.z); if(d<bd){ bd=d; best=n; } });
+  return best;
+}
+function tryMine(){
+  if(mining) return;
+  var n = nearMineNode(); if(!n){ toast('⛏️ Hãy đến gần tinh thể tím ở Mỏ Huyền Thạch'); return; }
+  mining = { node: n, t: 0 };
+  document.getElementById('mineProg').style.display = 'block';
+}
+
+/* ================= HELPERS ================= */
+function dist2d(a, b){ return Math.hypot(a.x-b.x, a.z-b.z); }
+function faceTo(obj, pos){ obj.rotation.y = Math.atan2(pos.x - obj.position.x, pos.z - obj.position.z); }
+function collide(pos){
+  colliders.forEach(function(c){
+    var dx = pos.x - c.x, dz = pos.z - c.z, d = Math.hypot(dx, dz);
+    if(d < c.r && d > 0.001){ pos.x = c.x + dx/d*c.r; pos.z = c.z + dz/d*c.r; }
+  });
+  pos.x = Math.max(-124, Math.min(124, pos.x)); pos.z = Math.max(-124, Math.min(124, pos.z));
+}
+function zoneOf(p){
+  if(p.z > 26) return '🏯 Thành Thiên Vân (an toàn)';
+  if(p.x < -22 && p.z < -14) return '🌲 Rừng Thanh Lam';
+  if(p.x > 22 && p.z < -14) return '⛏️ Mỏ Huyền Thạch';
+  return '🌾 Đồng Vân Châu';
+}
+
+/* ================= HUD ================= */
+function updHud(){
+  document.getElementById('hpFill').style.width = Math.max(0, hp/maxHp()*100) + '%';
+  document.getElementById('mpFill').style.width = Math.max(0, mp/maxMp()*100) + '%';
+  document.getElementById('hpTxt').textContent = 'HP ' + Math.max(0, Math.ceil(hp)) + '/' + maxHp();
+  document.getElementById('mpTxt').textContent = 'MP ' + Math.max(0, Math.floor(mp)) + '/' + maxMp();
+  document.getElementById('lvlLine').innerHTML = 'Cấp <b>' + S.lvl + '</b> · Kiếm Tông · Lực chiến <b>' + power() + '</b>';
+  document.getElementById('moneyLine').innerHTML = '🪙 ' + S.gold + ' vàng &nbsp;·&nbsp; 💜 ' + S.ht + ' Huyền Thiết';
+  document.getElementById('xpFill').style.width = (S.xp/xpNeed(S.lvl)*100) + '%';
+  document.getElementById('xpTxt').textContent = 'EXP ' + S.xp + '/' + xpNeed(S.lvl);
+  document.getElementById('potCnt').textContent = '×' + S.potions;
+  updQuest();
+}
+function updQuest(){
+  var q = QUESTS[S.questIdx]; if(!q) return;
+  document.getElementById('questTxt').innerHTML = '<b>' + q.name + '</b><br>' + q.desc + ' <span class="prog">' + S.questProg + '/' + q.need + '</span>';
+}
+function updSkillBtns(dt){
+  ['spin','dash','ult'].forEach(function(k, i){
+    var btn = document.getElementById('sk' + (i+1)); var cdEl = btn.querySelector('.cd');
+    if(k==='ult' && S.lvl < CFG.skills.ult.unlockLvl){ cdEl.style.display='flex'; cdEl.textContent='🔒'; return; }
+    if(skillCd[k] > 0){ skillCd[k] = Math.max(0, skillCd[k]-dt); cdEl.style.display='flex'; cdEl.textContent = Math.ceil(skillCd[k]); }
+    else cdEl.style.display='none';
+  });
+}
+
+/* ================= INPUT ================= */
+function bindInput(){
+  addEventListener('keydown', function(e){ keys[e.code] = true;
+    if(e.code === 'Space'){ e.preventDefault(); basicAttack(); }
+    if(e.code === 'Digit1') useSkill('spin'); if(e.code === 'Digit2') useSkill('dash'); if(e.code === 'Digit3') useSkill('ult');
+    if(e.code === 'KeyF') tryMine();
+  });
+  addEventListener('keyup', function(e){ keys[e.code] = false; });
+  var dragging = false, lx = 0, ly = 0;
+  renderer.domElement.addEventListener('pointerdown', function(e){ dragging = true; lx = e.clientX; ly = e.clientY; });
+  addEventListener('pointerup', function(){ dragging = false; });
+  addEventListener('pointermove', function(e){ if(!dragging) return;
+    camYaw -= (e.clientX - lx) * 0.005; camPitch = Math.max(0.25, Math.min(1.25, camPitch + (e.clientY - ly) * 0.004));
+    lx = e.clientX; ly = e.clientY; });
+  renderer.domElement.addEventListener('wheel', function(e){ camDist = Math.max(7, Math.min(20, camDist + e.deltaY*0.01)); }, { passive: true });
+  document.getElementById('atkBtn').addEventListener('click', basicAttack);
+  document.getElementById('sk1').addEventListener('click', function(){ useSkill('spin'); });
+  document.getElementById('sk2').addEventListener('click', function(){ useSkill('dash'); });
+  document.getElementById('sk3').addEventListener('click', function(){ useSkill('ult'); });
+  document.getElementById('mineBtn').addEventListener('click', tryMine);
+  document.getElementById('potBtn').addEventListener('click', usePotion);
+  document.getElementById('autoBtn').addEventListener('click', toggleAuto);
+  document.getElementById('saveBtn').addEventListener('click', function(){ saveGame(false); });
+  document.getElementById('soundBtn').addEventListener('click', function(e){ S.sound = !S.sound; e.target.textContent = S.sound ? '🔊' : '🔇'; });
+  document.getElementById('questBox').addEventListener('click', function(){
+    var q = QUESTS[S.questIdx]; if(q){ autoTargetPos = { x: q.x, z: q.z }; toast('🏃 Tự chạy đến khu vực nhiệm vụ…'); }
+  });
+  // Joystick
+  var base = document.getElementById('joyBase'), stick = document.getElementById('joyStick'), joyId = null;
+  base.addEventListener('pointerdown', function(e){ joyId = e.pointerId; moveJoy(e); });
+  addEventListener('pointermove', function(e){ if(e.pointerId === joyId) moveJoy(e); });
+  addEventListener('pointerup', function(e){ if(e.pointerId === joyId){ joyId = null; joyVec = {x:0,y:0}; stick.style.left='37px'; stick.style.top='37px'; } });
+  function moveJoy(e){
+    var r = base.getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+    var dx = e.clientX - cx, dy = e.clientY - cy, d = Math.hypot(dx, dy), max = 38;
+    if(d > max){ dx *= max/d; dy *= max/d; }
+    stick.style.left = (37 + dx) + 'px'; stick.style.top = (37 + dy) + 'px';
+    joyVec = { x: dx/max, y: dy/max };
+  }
+  addEventListener('resize', function(){ camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+}
+function usePotion(){
+  if(S.potions <= 0){ toast('❌ Hết Bình Máu — đánh quái có tỉ lệ rơi thêm'); return; }
+  if(hp >= maxHp()){ toast('Máu đã đầy'); return; }
+  S.potions--; hp = Math.min(maxHp(), hp + maxHp()*0.45);
+  ringFx(player.position.x, player.position.z, 0x51cf66, 3); logLoot('🧪 Dùng Bình Máu +45% HP'); updHud(); saveGame(true);
+}
+function toggleAuto(){
+  S.auto = !S.auto;
+  var b = document.getElementById('autoBtn'); b.classList.toggle('on', S.auto); b.textContent = S.auto ? 'AUTO ●' : 'AUTO';
+  toast(S.auto ? '🤖 AUTO BẬT — tự tìm quái, đánh, dùng Xoáy Kiếm, nhặt đồ' : '🤖 AUTO TẮT');
+  if(!S.auto) autoTargetPos = null;
+}
+
+/* ================= GAME LOOP ================= */
+var mmCtx = null;
+function drawMinimap(){
+  if(!mmCtx) mmCtx = document.getElementById('minimap').getContext('2d');
+  var c = mmCtx; c.clearRect(0,0,120,120);
+  c.fillStyle = '#3f6212'; c.fillRect(0,0,120,120);
+  function px(x){ return (x+130)/260*120; } function pz(z){ return (z+130)/260*120; }
+  c.fillStyle = '#78716c'; c.fillRect(px(-43), pz(27), 86/260*120, 70/260*120);       // city
+  c.fillStyle = '#365314'; c.fillRect(px(-125), pz(-121), 105/260*120, 105/260*120); // forest
+  c.fillStyle = '#57534e'; c.fillRect(px(21), pz(-121), 105/260*120, 105/260*120);    // mine
+  c.fillStyle = '#c77dff'; mineNodes.forEach(function(n){ c.fillRect(px(n.x)-2, pz(n.z)-2, 4, 4); });
+  c.fillStyle = '#ff4444'; monsters.forEach(function(m){ if(!m.dead) c.fillRect(px(m.group.position.x)-1.5, pz(m.group.position.z)-1.5, 3, 3); });
+  c.fillStyle = '#ffffff'; c.beginPath(); c.arc(px(player.position.x), pz(player.position.z), 3.4, 0, 7); c.fill();
+  c.strokeStyle = '#ffd166'; c.stroke();
+}
+function playerMoveVec(){
+  var x = 0, y = 0;
+  if(keys['KeyW'] || keys['ArrowUp']) y -= 1; if(keys['KeyS'] || keys['ArrowDown']) y += 1;
+  if(keys['KeyA']) x -= 1;
+  if(keys['KeyD']) x += 1; if(keys['ArrowLeft']) x -= 1; if(keys['ArrowRight']) x += 1;
+  x += joyVec.x; y += joyVec.y;
+  var len = Math.hypot(x, y); if(len > 1){ x/=len; y/=len; }
+  return { x:x, y:y, active: len > 0.12 };
+}
+function update(dt){
+  /* --- player movement --- */
+  var mv = playerMoveVec(); var moving = false;
+  var speed = 8.2;
+  if(mining){ /* stand still while mining */ }
+  else if(mv.active){
+    autoTargetPos = null;
+    var sin = Math.sin(camYaw), cos = Math.cos(camYaw);
+    var wx = (mv.x * cos - mv.y * sin), wz = (mv.y * cos + mv.x * sin);
+    // camera-relative: forward on screen = -sin/-cos of yaw
+    var fx = -Math.sin(camYaw), fz = -Math.cos(camYaw);
+    var rx = Math.cos(camYaw), rz = -Math.sin(camYaw);
+    wx = fx * (-mv.y) + rx * mv.x; wz = fz * (-mv.y) + rz * mv.x;
+    player.position.x += wx * speed * dt; player.position.z += wz * speed * dt;
+    player.rotation.y = Math.atan2(wx, wz); moving = true;
+  } else if(autoTargetPos){
+    var dx = autoTargetPos.x - player.position.x, dz = autoTargetPos.z - player.position.z, d = Math.hypot(dx, dz);
+    if(d < 2.2) autoTargetPos = null;
+    else { player.position.x += dx/d*speed*dt; player.position.z += dz/d*speed*dt; player.rotation.y = Math.atan2(dx, dz); moving = true; }
+  } else if(S.auto){
+    var t = (target && !target.dead) ? target : nearestMonster(34);
+    if(!t){
+      // Không có quái gần: tự chạy đến khu vực nhiệm vụ hiện tại (auto nhiệm vụ kiểu MIR4)
+      var q = QUESTS[S.questIdx];
+      if(q){ var qdx = q.x - player.position.x, qdz = q.z - player.position.z, qd = Math.hypot(qdx, qdz);
+        if(qd > 4){ player.position.x += qdx/qd*speed*dt; player.position.z += qdz/qd*speed*dt; player.rotation.y = Math.atan2(qdx, qdz); moving = true; } }
+    }
+    if(t){
+      setTarget(t);
+      var dd = dist2d(player.position, t.group.position);
+      if(dd > 2.9){ var ax = t.group.position.x - player.position.x, az = t.group.position.z - player.position.z, al = Math.hypot(ax, az)||1;
+        player.position.x += ax/al*speed*dt; player.position.z += az/al*speed*dt; player.rotation.y = Math.atan2(ax, az); moving = true; }
+      else { faceTo(player, t.group.position); basicAttack(); if(skillCd.spin<=0 && mp>=CFG.skills.spin.mp) useSkill('spin'); }
+    }
+  }
+  collide(player.position);
+  // walk bob + sword swing
+  if(moving) player.position.y = Math.abs(Math.sin(performance.now()*0.012)) * 0.09; else player.position.y = 0;
+  if(playerAtkAnim > 0){ playerAtkAnim -= dt; swordPivot.rotation.x = -Math.sin((0.22-playerAtkAnim)/0.22 * Math.PI) * 1.7; }
+  else swordPivot.rotation.x = 0;
+
+  /* --- mining --- */
+  if(mining){
+    mining.t += dt;
+    document.getElementById('mineFill').style.width = Math.min(100, mining.t/2*100) + '%';
+    if(mining.t >= 2){
+      var n = mining.node; n.amount--;
+      var gain = 8 + Math.round(Math.random()*7); S.ht += gain;
+      logLoot('⛏️ Đào được +' + gain + ' Huyền Thiết' + (n.amount<=0 ? ' — điểm mỏ đã cạn, hồi sau 60s' : ''));
+      beep(880, 0.12); updHud(); saveGame(true);
+      if(n.amount <= 0){ n.respawn = 60; n.crys.forEach(function(c){ c.visible = false; }); }
+      mining = null; document.getElementById('mineProg').style.display = 'none';
+    }
+  }
+  mineNodes.forEach(function(n){
+    n.crys.forEach(function(c, i){ c.rotation.y += dt*(0.8+i*0.3); });
+    if(n.amount <= 0 && n.respawn > 0){ n.respawn -= dt; if(n.respawn <= 0){ n.amount = 5; n.crys.forEach(function(c){ c.visible = true; }); } }
+  });
+
+  /* --- regen --- */
+  hp = Math.min(maxHp(), hp + maxHp()*0.012*dt); mp = Math.min(maxMp(), mp + maxMp()*0.05*dt);
+
+  /* --- monsters --- */
+  monsters.forEach(function(m){
+    if(m.dead){ m.respawnT -= dt; if(m.respawnT <= 0){ m.dead = false; m.hp = m.maxHp; m.group.visible = true; m.group.position.set(m.home.x, 0, m.home.z); m.state='idle'; } return; }
+    m.barG.quaternion.copy(camera.quaternion);
+    m.barFg.scale.x = Math.max(0, m.hp/m.maxHp); m.barFg.position.x = -(1 - m.hp/m.maxHp) * 0.81;
+    if(m.hitFlash > 0){ m.hitFlash -= dt; }
+    if(m.stun > 0){ m.stun -= dt; return; }
+    var d = dist2d(player.position, m.group.position);
+    var homeD = Math.hypot(m.group.position.x - m.home.x, m.group.position.z - m.home.z);
+    if(m.state === 'idle'){
+      m.wanderT -= dt;
+      if(m.wanderT <= 0){ m.wanderT = 2 + Math.random()*2; m.wTarget = { x: m.home.x + (Math.random()*7-3.5), z: m.home.z + (Math.random()*7-3.5) }; }
+      if(m.wTarget){ var wx2 = m.wTarget.x - m.group.position.x, wz2 = m.wTarget.z - m.group.position.z, wl = Math.hypot(wx2, wz2);
+        if(wl > 0.4){ m.group.position.x += wx2/wl*m.cfg.speed*0.35*dt; m.group.position.z += wz2/wl*m.cfg.speed*0.35*dt; m.group.rotation.y = Math.atan2(wx2, wz2); } }
+      if(d < 9) m.state = 'chase';
+    } else if(m.state === 'chase'){
+      if(d > 30 || homeD > 34){ m.state = 'return'; if(target === m) setTarget(null); }
+      else if(d > 2.1){ faceTo(m.group, player.position); m.group.position.x += (player.position.x - m.group.position.x)/d * m.cfg.speed * dt; m.group.position.z += (player.position.z - m.group.position.z)/d * m.cfg.speed * dt; }
+      else {
+        faceTo(m.group, player.position); m.atkT -= dt;
+        if(m.atkT <= 0){ m.atkT = 1.05;
+          var r = damageCalc(m.cfg.atk + m.cfg.lvl*1.5, 1.0, def()); hp -= r.dmg;
+          dmgNum(player.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '-' + r.dmg, '#ff6b6b', 16); beep(140, 0.1); updHud();
+          if(hp <= 0) playerDie();
+        }
+      }
+    } else if(m.state === 'return'){
+      if(homeD < 0.6){ m.state = 'idle'; m.hp = Math.min(m.maxHp, m.hp + m.maxHp*0.4); }
+      else { m.group.position.x += (m.home.x - m.group.position.x)/homeD * m.cfg.speed * 1.2 * dt; m.group.position.z += (m.home.z - m.group.position.z)/homeD * m.cfg.speed * 1.2 * dt; faceTo(m.group, m.home); m.hp = Math.min(m.maxHp, m.hp + m.maxHp*0.25*dt); }
+    }
+  });
+
+  /* --- loot pickup --- */
+  for(var i = loots.length-1; i >= 0; i--){
+    var L = loots[i]; L.t += dt*3; L.mesh.position.y = 0.45 + Math.sin(L.t)*0.13; L.mesh.rotation.y += dt*2;
+    if(dist2d(player.position, L.mesh.position) < 1.7){
+      if(L.kind === 'gold'){ S.gold += L.amt; logLoot('🪙 +' + L.amt + ' vàng'); } else { S.ht += L.amt; logLoot('💜 +' + L.amt + ' Huyền Thiết'); }
+      beep(990, 0.07); scene.remove(L.mesh); loots.splice(i, 1); updHud(); saveGame(true);
+    }
+  }
+
+  /* --- camera --- */
+  var cx = player.position.x - Math.sin(camYaw) * Math.cos(camPitch) * camDist * -1;
+  var cz = player.position.z - Math.cos(camYaw) * Math.cos(camPitch) * camDist * -1;
+  // camera positioned behind based on yaw: offset direction
+  var ox = Math.sin(camYaw) * Math.cos(camPitch) * camDist;
+  var oz = Math.cos(camYaw) * Math.cos(camPitch) * camDist;
+  camera.position.set(player.position.x + ox, player.position.y + Math.sin(camPitch)*camDist + 1.5, player.position.z + oz);
+  camera.lookAt(player.position.x, player.position.y + 1.6, player.position.z);
+
+  /* --- zone label --- */
+  var zn = zoneOf(player.position);
+  if(zoneEl !== zn){ zoneEl = zn; document.getElementById('zoneName').textContent = zn; }
+}
+function playerDie(){
+  toast('💀 Bạn đã gục ngã — hồi sinh tại Thành Thiên Vân');
+  hp = maxHp(); mp = maxMp(); player.position.set(0, 0, 66);
+  if(target) setTarget(null); S.auto = false; document.getElementById('autoBtn').classList.remove('on');
+  updHud();
+}
+function animate(){
+  requestAnimationFrame(animate);
+  var dt = Math.min(clock.getDelta(), 0.05);
+  if(S.started){ update(dt); updSkillBtns(dt); }
+  renderer.render(scene, camera);
+  fpsFrames++; fpsTime += dt;
+  if(fpsTime >= 0.5){ document.getElementById('fps').textContent = 'FPS: ' + Math.round(fpsFrames/fpsTime); fpsFrames = 0; fpsTime = 0; drawMinimap(); }
+}
+
+/* ================= BOOT ================= */
+loadGame();
+buildWorld();
+makePlayer();
+spawnAllMonsters();
+bindInput();
+updHud();
+animate();
+document.getElementById('playBtn').addEventListener('click', function(){
+  document.getElementById('startScr').style.display = 'none';
+  document.getElementById('hud').style.display = 'block';
+  S.started = true;
+  logLoot('📜 Nói chuyện với Trưởng thôn (khối vàng ở thành) — hoặc bấm khung Nhiệm vụ để tự chạy ra bãi quái');
+  toast('⚔️ Chào mừng đến Vân Châu!');
+});
+document.getElementById('resetSave').addEventListener('click', function(){
+  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+  alert('Đã xoá dữ liệu lưu. Tải lại trang để chơi từ đầu.'); location.reload();
+});
+setInterval(function(){ if(S.started) saveGame(true); }, 15000);
+</script>
+</body>
+</html>
