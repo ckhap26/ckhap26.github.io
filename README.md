@@ -1,11 +1,19 @@
-# Huyền Kiếm Online — bản V1.6 (chơi thử)
+# Huyền Kiếm Online — bản V1.7 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-## Mới trong V1.6
+## Mới trong V1.7
+- **🧭 Tìm boss & di chuyển nhanh**: bấm vào dòng đếm ngược boss (góc phải) để nhân vật **tự chạy đến Hắc Lang Vương** và tự đánh; **bấm thẳng vào bản đồ nhỏ** để tự chạy tới điểm bất kỳ; nút **🗺️ Bản đồ** liệt kê 6 địa điểm với 2 cách đi: 🚶 Đi tới (miễn phí) hoặc ⚡ Dịch chuyển ngay (phí theo khoảng cách)
+- **👜 Túi đồ lớn hơn**: 40 ô từ đầu, mở rộng +20 ô/lần bằng vàng, tối đa 140 ô
+- **🟪 Ma Phương** (đúng chất MIR4): đấu trường riêng theo **thời gian 5 phút**, quái tràn ra liên tục và mạnh dần, rơi nhiều Huyền Thiết — 2 lượt/ngày, mở từ cấp 8, tách riêng với Bí Cảnh theo đợt
+- **🔨 Lò Rèn — Chế tạo**: rèn trang bị theo cấp, chế Bình Máu Lớn (+60% HP), đúc Đá Cường Hoá (+20% tỉ lệ lần cường hoá kế tiếp), đổi 100 Huyền Thiết → Vé Triệu Hồi
+- **🏆 Thành Tựu**: 10 cột mốc (cấp, số quái hạ, cường hoá +10, linh thú, Bí Cảnh, Ma Phương, boss, ủy thác) nhận vàng / Huyền Thiết / Vé
+- **Chuỗi nhiệm vụ chính thêm Chương 3**: săn Hắc Lang Vương, Ma Phương huyền bí, danh tiếng ủy thác (tổng 11 nhiệm vụ)
+
+## Từ V1.6
 - **📋 Ủy Thác**: bảng việc phụ trong thành — nhận tối đa 3 việc cùng lúc (diệt quái, thu Huyền Thiết, đào mỏ, diệt tinh anh, thám hiểm Bí Cảnh…), xong nhận vàng / Huyền Thiết / Vé Triệu Hồi; bảng bổ sung việc mới liên tục, làm mới mỗi ngày
 - **🐺 Boss bãi theo giờ**: Hắc Lang Vương xuất hiện sâu trong Rừng Thanh Lam theo chu kỳ 15 phút, ở lại 6 phút — hạ boss được Vé Triệu Hồi + trang bị bậc 5–6; góc phải màn hình luôn hiện đếm ngược boss
 - Giao diện điện thoại đã căn lại: không còn phần tử đè chồng nhau (cả dọc lẫn ngang)
