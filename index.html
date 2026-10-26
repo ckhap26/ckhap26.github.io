@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Huyền Kiếm Online — V1.7</title>
+<title>Huyền Kiếm Online — V1.8</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -156,7 +156,7 @@
 
 <div id="startScr">
   <h1>⚔️ HUYỀN KIẾM ONLINE</h1>
-  <h2>V1.7 — Bản đồ dịch chuyển · Ma Phương · Lò Rèn · Thành Tựu</h2>
+  <h2>V1.8 — Hợp thành linh thú · Nâng cấp kỹ năng · Danh hiệu</h2>
   <div class="clsRow">
     <div class="classCard sel" data-cls="kiem">
       <h3>🗡️ Kiếm Tông</h3>
@@ -177,7 +177,7 @@
     <b>Điện thoại:</b> joystick trái di chuyển · kéo nửa phải màn hình xoay camera · các nút skill bên phải
   </div>
   <button id="resetSave">Xoá dữ liệu lưu &amp; chơi lại từ đầu</button>
-  <div id="verTag">V1.7 — đồ hoạ khối thử nghiệm · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
+  <div id="verTag">V1.8 — đồ hoạ khối thử nghiệm · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
 </div>
 
 <div id="hud">
@@ -252,6 +252,8 @@
     <div class="panelHead"><b>🏆 THÀNH TỰU</b><button class="pClose" data-close="achPanel">✖</button></div>
     <div style="color:#adb5bd;font-size:12px">Hoàn thành các cột mốc trong hành trình Vân Châu để nhận thưởng.</div>
     <div id="achList" style="margin-top:8px"></div>
+    <div style="margin-top:12px;border-top:1px solid #2c3542;padding-top:10px"><b>👑 Danh hiệu</b> — mở khoá theo thành tích, đeo 1 danh hiệu để cộng chỉ số và hiện trên hồ sơ:</div>
+    <div id="titleList" style="margin-top:8px"></div>
   </div>
 
   <div id="mapPanel" class="panel">
@@ -272,6 +274,8 @@
     <div class="panelHead"><b>🧘 NỘI CÔNG & SƯU TẦM</b><button class="pClose" data-close="ncPanel">✖</button></div>
     <div id="ncPoints"></div>
     <div id="ncList"></div>
+    <div style="margin-top:12px;border-top:1px solid #2c3542;padding-top:10px"><b>⚔️ Cường hoá kỹ năng</b> — dùng 🔷 Tinh Hoa Kỹ Năng (rơi từ quái, nhiều ở tinh anh/boss/Bí Cảnh/Ma Phương). Mỗi cấp +8% hiệu lực kỹ năng, tối đa cấp 10:</div>
+    <div id="skillList" style="margin-top:8px"></div>
     <div style="margin-top:12px;border-top:1px solid #2c3542;padding-top:10px"><b>📖 Sưu Tầm (Codex)</b> — hạ quái tích luỹ, đủ mốc bấm Nhận để cộng chỉ số vĩnh viễn:</div>
     <div id="codexList" style="margin-top:8px"></div>
   </div>
@@ -280,6 +284,8 @@
     <div class="panelHead"><b>🐾 LINH THÚ</b><button class="pClose" data-close="spiritPanel">✖</button></div>
     <div id="spiritInfo"></div>
     <button id="summonBtn">🔮 Triệu hồi linh thú</button>
+    <div id="fuseInfo" style="font-size:12px;color:#adb5bd;margin-top:8px">🔀 <b>Hợp thành</b>: chọn 2 linh thú cùng phẩm ở danh sách dưới → hợp thành 1 linh thú ngẫu nhiên phẩm cao hơn (phí 200 vàng).</div>
+    <button id="fuseBtn" disabled>🔀 HỢP THÀNH</button>
     <div style="font-size:12px;color:#adb5bd;margin:6px 0">Trang bị tối đa 3 linh thú — chỉ số cộng thẳng vào nhân vật. Trùng linh thú → tăng sao (+25% chỉ số/sao, tối đa 5 sao). Linh thú đầu tiên sẽ bay theo bạn!</div>
     <div id="spiritList"></div>
   </div>
@@ -292,6 +298,7 @@
       <div>⬆️ <b>Cường hoá ô đang chọn:</b> <span id="enhInfo"></span></div>
       <button id="enhBtn">🔨 CƯỜNG HOÁ</button>
       <div class="enhNote">+1→+5: 100% · +6→+10: 80%→55% (rớt không tụt cấp) · +11→+15: 45%→25% (rớt tụt 1 cấp). Mỗi cấp +6% chỉ số món đồ. Vũ khí +10 trở lên phát sáng.</div>
+    <div class="enhNote">🧪 Tự uống bình khi HP dưới 35% (ưu tiên Bình Máu Lớn): <button id="autoPotBtn">Đang bật</button></div>
     </div>
     <div class="bagHead"><b>👜 Túi đồ</b> <span id="bagCnt"></span> <button id="bagExpBtn">➕ Mở rộng túi</button></div>
     <div id="bagList"></div>
@@ -360,13 +367,14 @@ var S = {
   reqOffers: [], reqActive: [], reqDay: '',
   bagExp: 0, navBoss: false, potionsBig: 0, luckStones: 0,
   bcClears: 0, mpClears: 0, summons: 0, reqDone: 0, achClaimed: {},
-  inMP: false, mpTime: 0, mpKills: 0, mpSpawnT: 0
+  inMP: false, mpTime: 0, mpKills: 0, mpSpawnT: 0,
+  skillLvl: { s1: 1, s2: 1, ult: 1 }, skillEss: 0, title: '', autoPot: true, potCd: 0
 };
 function starterEquip(){ return { weapon: mkItem('weapon', 1), armor: mkItem('armor', 1), hat: mkItem('hat', 1), boots: mkItem('boots', 1) }; }
-function maxHp(){ return Math.round(cls().hp + (S.lvl-1) * cls().hpGrow + ncBonus('hp') + spBonus('hp') + codexBonus('hp')); }
-function maxMp(){ return Math.round(cls().mp + (S.lvl-1) * 9 + ncBonus('mp') + spBonus('mp') + codexBonus('mp')); }
-function atk(){ return Math.round(cls().atk + (S.lvl-1) * cls().atkGrow + gearAtk() + ncBonus('atk') + spBonus('atk') + codexBonus('atk')); }
-function def(){ return Math.round(cls().def + (S.lvl-1) * cls().defGrow + gearDef() + ncBonus('def') + spBonus('def') + codexBonus('def')); }
+function maxHp(){ return Math.round(cls().hp + (S.lvl-1) * cls().hpGrow + ncBonus('hp') + spBonus('hp') + codexBonus('hp') + titleBonus('hp')); }
+function maxMp(){ return Math.round(cls().mp + (S.lvl-1) * 9 + ncBonus('mp') + spBonus('mp') + codexBonus('mp') + titleBonus('mp')); }
+function atk(){ return Math.round(cls().atk + (S.lvl-1) * cls().atkGrow + gearAtk() + ncBonus('atk') + spBonus('atk') + codexBonus('atk') + titleBonus('atk')); }
+function def(){ return Math.round(cls().def + (S.lvl-1) * cls().defGrow + gearDef() + ncBonus('def') + spBonus('def') + codexBonus('def') + titleBonus('def')); }
 function power(){ return Math.round(atk()*10 + def()*8 + maxHp()/5 + maxMp()/10 + (S.equip ? (S.equip.weapon.enh + S.equip.armor.enh + S.equip.hat.enh + S.equip.boots.enh) * 15 : 0)); }
 var hp = 260, mp = 80;
 function dayKey(){ var d = new Date(); return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate(); }
@@ -394,7 +402,7 @@ var QUESTS = [
 /* ================= SAVE / LOAD ================= */
 var SAVE_KEY = 'huyenKiemGreybox_v1';
 function saveGame(silent){
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed, reqOffers: S.reqOffers, reqActive: S.reqActive, reqDay: S.reqDay, bagExp: S.bagExp, potionsBig: S.potionsBig, luckStones: S.luckStones, bcClears: S.bcClears, mpClears: S.mpClears, summons: S.summons, reqDone: S.reqDone, achClaimed: S.achClaimed })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed, reqOffers: S.reqOffers, reqActive: S.reqActive, reqDay: S.reqDay, bagExp: S.bagExp, potionsBig: S.potionsBig, luckStones: S.luckStones, bcClears: S.bcClears, mpClears: S.mpClears, summons: S.summons, reqDone: S.reqDone, achClaimed: S.achClaimed, skillLvl: S.skillLvl, skillEss: S.skillEss, title: S.title, autoPot: S.autoPot })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
 }
 function applyLoaded(d){
   if(!d) return;
@@ -411,6 +419,8 @@ function applyLoaded(d){
   S.bagExp = d.bagExp || 0; S.potionsBig = d.potionsBig || 0; S.luckStones = d.luckStones || 0;
   S.bcClears = d.bcClears || 0; S.mpClears = d.mpClears || 0; S.summons = d.summons || 0; S.reqDone = d.reqDone || 0; S.achClaimed = d.achClaimed || {};
   S.inMP = false; S.mpTime = 0; S.mpKills = 0;
+  S.skillLvl = (d.skillLvl && d.skillLvl.s1) ? d.skillLvl : { s1: 1, s2: 1, ult: 1 };
+  S.skillEss = d.skillEss || 0; S.title = d.title || ''; S.autoPot = d.autoPot !== false;
   S.inRealm = false; S.bcWave = 0;
   hp = maxHp(); mp = maxMp();
 }
@@ -684,6 +694,9 @@ function killMonster(m){
   if(Math.random() < 0.10) { S.potions++; logLoot('🧪 Nhặt được Bình Máu'); updHud(); }
   gainXp(m.cfg.xp);
   dailyReset(); S.daily.kills++; if(m.cfg.elite) S.daily.elite++;
+  // skill essence drop
+  if(m.cfg.elite || m.boss){ var eb = m.boss ? 5 : 2; S.skillEss += eb; logLoot('🔷 +' + eb + ' Tinh Hoa Kỹ Năng'); }
+  else if(Math.random() < 0.06){ S.skillEss++; }
   // gear drop
   if(Math.random() < 0.18){
     var slots = ['weapon','armor','hat','boots']; var sl = slots[Math.floor(Math.random()*4)];
@@ -778,38 +791,39 @@ function useSkill(i){
   }
   if(sk.kind === 'aoe_target' && !t) t = nearestMonster(16);
   mp -= sk.mp; skillCd[sk.id] = sk.cd; swingAnim();
+  var skMul = skillMul(i);
   if(sk.kind === 'aoe_self'){
     ringFx(player.position.x, player.position.z, 0x4cc9f0, sk.radius * 1.6);
-    monsters.forEach(function(m){ if(!m.dead && dist2d(player.position, m.group.position) <= sk.radius) hurtMonster(m, sk.coeff, true); });
+    monsters.forEach(function(m){ if(!m.dead && dist2d(player.position, m.group.position) <= sk.radius) hurtMonster(m, sk.coeff * skMul, true); });
   } else if(sk.kind === 'dash'){
     var dx = t.group.position.x - player.position.x, dz = t.group.position.z - player.position.z, d = Math.sqrt(dx*dx+dz*dz) || 1;
     player.position.x = t.group.position.x - dx/d*2.2; player.position.z = t.group.position.z - dz/d*2.2;
-    faceTo(player, t.group.position); hurtMonster(t, sk.coeff, true); t.stun = 1.2;
+    faceTo(player, t.group.position); hurtMonster(t, sk.coeff * skMul, true); t.stun = 1.2;
     ringFx(t.group.position.x, t.group.position.z, 0xffa94d, 2.5); updTargetBar();
   } else if(sk.kind === 'aoe_target'){
     var c = t ? t.group.position : player.position;
     ringFx(c.x, c.z, 0xffd166, sk.radius * 1.6); beep(180, 0.3);
-    monsters.forEach(function(m){ if(!m.dead && dist2d(c, m.group.position) <= sk.radius){ hurtMonster(m, sk.coeff, true); if(sk.slow && !m.dead) m.slowT = sk.slow; } });
+    monsters.forEach(function(m){ if(!m.dead && dist2d(c, m.group.position) <= sk.radius){ hurtMonster(m, sk.coeff * skMul, true); if(sk.slow && !m.dead) m.slowT = sk.slow; } });
   } else if(sk.kind === 'chain'){
-    var hit = [t]; hurtMonster(t, sk.coeff, true); var from = t;
+    var hit = [t]; hurtMonster(t, sk.coeff * skMul, true); var from = t;
     for(var ci = 1; ci < sk.chains; ci++){
       var nx = null, nd = 7;
       monsters.forEach(function(m){ if(!m.dead && hit.indexOf(m) < 0){ var dd2 = dist2d(from.group.position, m.group.position); if(dd2 < nd){ nd = dd2; nx = m; } } });
-      if(!nx) break; hit.push(nx); hurtMonster(nx, sk.coeff * 0.8, true); from = nx;
+      if(!nx) break; hit.push(nx); hurtMonster(nx, sk.coeff * 0.8 * skMul, true); from = nx;
     }
     ringFx(t.group.position.x, t.group.position.z, 0xffe066, 3);
   } else if(sk.kind === 'heal'){
-    hp = Math.min(maxHp(), hp + maxHp() * sk.healPct);
-    ringFx(player.position.x, player.position.z, 0x51cf66, 4); logLoot('💚 Hồi Xuân Thuật +' + Math.round(maxHp()*sk.healPct) + ' HP'); beep(720, 0.15);
+    hp = Math.min(maxHp(), hp + maxHp() * sk.healPct * skMul);
+    ringFx(player.position.x, player.position.z, 0x51cf66, 4); logLoot('💚 Hồi Xuân Thuật +' + Math.round(maxHp()*sk.healPct*skMul) + ' HP'); beep(720, 0.15);
   } else if(sk.kind === 'dot'){
-    hurtMonster(t, sk.coeff, true);
-    if(!t.dead){ t.dot = { coeff: sk.dotCoeff, dur: sk.dotDur }; t.dotT = 0; }
+    hurtMonster(t, sk.coeff * skMul, true);
+    if(!t.dead){ t.dot = { coeff: sk.dotCoeff * skMul, dur: sk.dotDur }; t.dotT = 0; }
     ringFx(t.group.position.x, t.group.position.z, 0x95d5b2, 2.5);
   } else if(sk.kind === 'heal_aoe'){
-    hp = Math.min(maxHp(), hp + maxHp() * sk.healPct);
+    hp = Math.min(maxHp(), hp + maxHp() * sk.healPct * skMul);
     ringFx(player.position.x, player.position.z, 0xffb3c1, sk.radius * 1.6); beep(520, 0.25);
-    monsters.forEach(function(m){ if(!m.dead && dist2d(player.position, m.group.position) <= sk.radius) hurtMonster(m, sk.coeff, true); });
-    logLoot('🌸 Vạn Dược Tề Thiên: hồi ' + Math.round(maxHp()*sk.healPct) + ' HP + sát thương quanh thân');
+    monsters.forEach(function(m){ if(!m.dead && dist2d(player.position, m.group.position) <= sk.radius) hurtMonster(m, sk.coeff * skMul, true); });
+    logLoot('🌸 Vạn Dược Tề Thiên: hồi ' + Math.round(maxHp()*sk.healPct*skMul) + ' HP + sát thương quanh thân');
   }
   updHud();
 }
@@ -855,7 +869,7 @@ function updHud(){
   document.getElementById('mpFill').style.width = Math.max(0, mp/maxMp()*100) + '%';
   document.getElementById('hpTxt').textContent = 'HP ' + Math.max(0, Math.ceil(hp)) + '/' + maxHp();
   document.getElementById('mpTxt').textContent = 'MP ' + Math.max(0, Math.floor(mp)) + '/' + maxMp();
-  document.getElementById('lvlLine').innerHTML = 'Cấp <b>' + S.lvl + '</b> · ' + cls().name + ' · Lực chiến <b>' + power() + '</b>';
+  document.getElementById('lvlLine').innerHTML = 'Cấp <b>' + S.lvl + '</b> · ' + cls().name + ' · Lực chiến <b>' + power() + '</b>' + (titleName() ? '<br><span style="color:#e599f7">' + titleName() + '</span>' : '');
   document.getElementById('moneyLine').innerHTML = '🪙 ' + S.gold + ' vàng &nbsp;·&nbsp; 💜 ' + S.ht + ' Huyền Thiết';
   var bcB = document.getElementById('bcBtn'); if(bcB) bcB.textContent = S.inRealm ? '🚪 Thoát cảnh' : '🌀 Bí Cảnh (' + Math.max(0, 2 - (S.daily ? S.daily.bc || 0 : 0)) + ')';
   var mpB = document.getElementById('mpBtn'); if(mpB) mpB.textContent = S.inMP ? '🚪 Thoát Ma Phương' : '🟪 Ma Phương (' + Math.max(0, 2 - (S.daily ? S.daily.mp || 0 : 0)) + ')';
@@ -1012,6 +1026,9 @@ function update(dt){
   if(playerAtkAnim > 0){ playerAtkAnim -= dt; swordPivot.rotation.x = -Math.sin((0.22-playerAtkAnim)/0.22 * Math.PI) * 1.7; }
   else swordPivot.rotation.x = 0;
 
+  /* --- auto potion --- */
+  if(S.autoPot){ S.potCd -= dt; if(S.potCd <= 0 && hp < maxHp() * 0.35 && (S.potionsBig > 0 || S.potions > 0)){ usePotion(); S.potCd = 3; } }
+
   /* --- mining --- */
   if(mining){
     mining.t += dt;
@@ -1143,6 +1160,7 @@ function trainNC(id){
   updHud(); renderNC(); saveGame(true);
 }
 function renderNC(){
+  renderSkills();
   document.getElementById('ncPoints').innerHTML = 'Điểm Nội Công còn: <b style="color:#ffd166">' + ncPoints() + '</b> (mỗi cấp nhân vật = 1 điểm · tầng tối đa của mỗi mạch cần cấp nhân vật tương ứng)';
   document.getElementById('ncList').innerHTML = NC_NODES.map(function(n){
     var lv = ncLvl(n.id); var pips = ''; for(var i = 0; i < n.max; i++) pips += i < lv ? '●' : '○';
@@ -1240,13 +1258,14 @@ function spiritStatText(d){
   return parts.join(' · ');
 }
 function renderSpirits(){
+  renderFuse();
   document.getElementById('spiritInfo').innerHTML = '🎟️ Vé Triệu Hồi: <b>' + S.tickets + '</b> · 🪙 ' + S.gold + ' vàng · Đã trang bị: <b>' + (S.spirits.equipped || []).length + '/3</b>';
   document.getElementById('summonBtn').textContent = S.tickets > 0 ? '🔮 Triệu hồi (dùng 1 vé)' : '🔮 Triệu hồi (300 vàng)';
   var owned = SPIRITS.filter(function(d){ return spiritStars(d.id) > 0; });
   document.getElementById('spiritList').innerHTML = owned.length ? owned.map(function(d){
     var stars = spiritStars(d.id); var st = ''; for(var i = 0; i < 5; i++) st += i < stars ? '★' : '☆';
     var isEq = (S.spirits.equipped || []).indexOf(d.id) >= 0;
-    return '<div class="slotRow' + (isEq ? ' sel' : '') + '"><span>' + d.icon + ' <b>' + d.name + '</b> <span style="color:' + RAR_COLOR[d.rar] + '">[' + RAR_NAME[d.rar] + ']</span> <span style="color:#ffd166">' + st + '</span><br><span style="color:#adb5bd">' + spiritStatText(d) + '</span></span><button data-spirit="' + d.id + '">' + (isEq ? 'Tháo' : 'Trang bị') + '</button></div>';
+    return '<div class="slotRow' + (isEq ? ' sel' : '') + '"><span>' + d.icon + ' <b>' + d.name + '</b> <span style="color:' + RAR_COLOR[d.rar] + '">[' + RAR_NAME[d.rar] + ']</span> <span style="color:#ffd166">' + st + '</span><br><span style="color:#adb5bd">' + spiritStatText(d) + '</span></span><span><button data-spirit="' + d.id + '">' + (isEq ? 'Tháo' : 'Trang bị') + '</button> <button data-fuse="' + d.id + '">' + (fuseSel.indexOf(d.id) >= 0 ? '✓ Đã chọn hợp' : '🔀 Chọn hợp') + '</button></span></div>';
   }).join('') : '<div style="color:#adb5bd">Chưa có linh thú nào — bấm Triệu hồi thử vận may!</div>';
 }
 var petMesh = null;
@@ -1329,7 +1348,7 @@ function bcOnKill(){
   logLoot('🌀 Thưởng đợt ' + w + ': +' + goldR + ' vàng · +' + htR + ' Huyền Thiết');
   if(w < 5){ spawnWave(w + 1); }
   else {
-    S.tickets++; dailyReset(); reqProg('bc', null, 1); S.bcClears = (S.bcClears || 0) + 1;
+    S.tickets++; dailyReset(); reqProg('bc', null, 1); S.bcClears = (S.bcClears || 0) + 1; S.skillEss += 3; logLoot('🔷 +3 Tinh Hoa Kỹ Năng (thưởng Bí Cảnh)');
     var slots = ['weapon','armor','hat','boots']; var it = mkItem(slots[Math.floor(Math.random() * 4)], Math.max(2, Math.min(6, Math.round(S.lvl / 3))));
     if(S.bag.length < bagCap()) S.bag.push(it);
     toast('🏆 THẮNG BÍ CẢNH! +1 Vé Triệu Hồi · rơi ' + it.name);
@@ -1565,6 +1584,7 @@ function finishMP(){
   var gold = S.mpKills * 6 + 100; var htB = Math.floor(S.mpKills / 2);
   S.gold += gold; if(htB > 0) addHT(htB, false);
   S.mpClears = (S.mpClears || 0) + 1; questProgType('__MP__', 1);
+  var mpEss = Math.floor(S.mpKills / 8); if(mpEss > 0){ S.skillEss += mpEss; logLoot('🔷 +' + mpEss + ' Tinh Hoa Kỹ Năng (Ma Phương)'); }
   toast('🟪 HẾT GIỜ MA PHƯƠNG! Hạ ' + S.mpKills + ' quái · +' + gold + ' vàng · +' + htB + ' Huyền Thiết');
   logLoot('🟪 Tổng kết Ma Phương: ' + S.mpKills + ' quái · +' + gold + ' vàng · +' + htB + ' Huyền Thiết');
   beep(920, 0.3);
@@ -1649,6 +1669,7 @@ function achStat(key){
 }
 function achRewText(r){ return '🎁 ' + (r.gold ? r.gold + ' vàng' : '') + (r.ht ? (r.gold ? ' + ' : '') + r.ht + ' Huyền Thiết' : '') + (r.ticket ? ((r.gold || r.ht) ? ' + ' : '') + r.ticket + ' Vé' : ''); }
 function renderAch(){
+  renderTitles();
   document.getElementById('achList').innerHTML = ACH_DEF.map(function(a, i){
     var cur = Math.min(a.need, achStat(a.key)); var done = achStat(a.key) >= a.need; var claimed = !!S.achClaimed[i];
     return '<div class="slotRow"><span><b>' + a.name + '</b> — ' + cur + '/' + a.need + '<br><span style="color:#adb5bd">' + a.desc + '</span><br>' + achRewText(a.rew) + '</span>' + (claimed ? '<button disabled>Đã nhận</button>' : '<button data-ach="' + i + '"' + (done ? '' : ' disabled') + '>Nhận</button>') + '</div>';
@@ -1659,6 +1680,114 @@ function claimAch(i){
   S.achClaimed[i] = true;
   if(a.rew.gold) S.gold += a.rew.gold; if(a.rew.ht) S.ht += a.rew.ht; if(a.rew.ticket) S.tickets += a.rew.ticket;
   toast('🏆 Thành tựu: ' + a.name + ' — đã nhận thưởng!'); beep(880, 0.2);
+  updHud(); renderAch(); saveGame(true);
+}
+
+/* ================= NANG CAP KY NANG ================= */
+var SKILL_KEYS = ['s1', 's2', 'ult'];
+function skillMul(i){
+  var lv = (S.skillLvl && S.skillLvl[SKILL_KEYS[i]]) || 1;
+  return 1 + 0.08 * (lv - 1);
+}
+function renderSkills(){
+  var el = document.getElementById('skillList'); if(!el) return;
+  var head = '<div style="color:#adb5bd;font-size:12px;margin-bottom:6px">🔷 Tinh Hoa hiện có: <b style="color:#4cc9f0">' + S.skillEss + '</b></div>';
+  el.innerHTML = head + cls().skills.map(function(sk, i){
+    var key = SKILL_KEYS[i]; var lv = S.skillLvl[key] || 1;
+    var maxed = lv >= 10;
+    var cost = maxed ? null : { ess: lv, gold: 120 * lv };
+    return '<div class="slotRow"><span>' + sk.icon + ' <b>' + sk.name + '</b> · Cấp ' + lv + '/10<br><span style="color:#adb5bd">Hiệu lực hiện tại: ' + Math.round(skillMul(i) * 100) + '%' + (maxed ? ' (tối đa)' : ' · Nâng cấp: ' + cost.ess + ' 🔷 + ' + cost.gold + ' vàng → ' + Math.round((1 + 0.08 * lv) * 100) + '%') + '</span></span><button data-skill="' + i + '"' + (maxed ? ' disabled' : '') + '>Nâng cấp</button></div>';
+  }).join('');
+}
+function upgradeSkill(i){
+  var key = SKILL_KEYS[i]; var lv = S.skillLvl[key] || 1;
+  if(lv >= 10){ toast('Kỹ năng đã đạt cấp tối đa'); return; }
+  if(S.skillEss < lv){ toast('❌ Cần ' + lv + ' Tinh Hoa Kỹ Năng — đánh quái/tinh anh/boss để thu thập'); return; }
+  if(S.gold < 120 * lv){ toast('❌ Cần ' + (120 * lv) + ' vàng để nâng cấp kỹ năng'); return; }
+  S.skillEss -= lv; S.gold -= 120 * lv; S.skillLvl[key] = lv + 1;
+  toast('⚔️ ' + cls().skills[i].name + ' lên cấp ' + (lv + 1) + ' — hiệu lực ' + Math.round(skillMul(i) * 100) + '%'); beep(840, 0.15);
+  updHud(); renderNC(); saveGame(true);
+}
+
+/* ================= HOP THANH LINH THU ================= */
+var fuseSel = [];
+var RAR_ORDER = ['thuong', 'hiem', 'quy', 'truyen'];
+function renderFuse(){
+  var info = document.getElementById('fuseInfo'); var btn = document.getElementById('fuseBtn');
+  if(!info || !btn) return;
+  if(fuseSel.length === 0){ info.innerHTML = '🔀 <b>Hợp thành</b>: chọn 2 linh thú cùng phẩm ở danh sách dưới → hợp thành 1 linh thú ngẫu nhiên phẩm cao hơn (phí 200 vàng).'; btn.disabled = true; btn.textContent = '🔀 HỢP THÀNH'; return; }
+  var names = fuseSel.map(function(id){ var d = spiritDef(id); return d ? d.icon + ' ' + d.name : id; }).join(' + ');
+  if(fuseSel.length === 1){ info.innerHTML = '🔀 Đã chọn: <b>' + names + '</b> — chọn thêm 1 linh thú cùng phẩm.'; btn.disabled = true; btn.textContent = '🔀 Chọn thêm 1 linh thú'; return; }
+  var d1 = spiritDef(fuseSel[0]), d2 = spiritDef(fuseSel[1]);
+  if(d1.rar !== d2.rar){ info.innerHTML = '❌ Hai linh thú phải <b>cùng phẩm</b> mới hợp thành được: <b>' + names + '</b>'; btn.disabled = true; btn.textContent = '🔀 Khác phẩm — không hợp được'; return; }
+  if(d1.rar === 'truyen'){ info.innerHTML = '❌ Phẩm Truyền thuyết là cao nhất, không hợp lên nữa.'; btn.disabled = true; btn.textContent = '🔀 Đã tối đa phẩm'; return; }
+  var nextRar = RAR_ORDER[RAR_ORDER.indexOf(d1.rar) + 1];
+  info.innerHTML = '🔀 Hợp <b>' + names + '</b> → 1 linh thú ngẫu nhiên phẩm <b style="color:' + RAR_COLOR[nextRar] + '">' + RAR_NAME[nextRar] + '</b> (phí 200 vàng)';
+  btn.disabled = S.gold < 200; btn.textContent = '🔀 HỢP THÀNH (200 vàng)';
+}
+function toggleFuse(id){
+  var ix = fuseSel.indexOf(id);
+  if(ix >= 0) fuseSel.splice(ix, 1);
+  else { if(fuseSel.length >= 2) fuseSel.shift(); fuseSel.push(id); }
+  renderSpirits();
+}
+function doFuse(){
+  if(fuseSel.length !== 2) return;
+  var d1 = spiritDef(fuseSel[0]), d2 = spiritDef(fuseSel[1]);
+  if(!d1 || !d2 || d1.rar !== d2.rar || d1.rar === 'truyen' || S.gold < 200) return;
+  S.gold -= 200;
+  fuseSel.forEach(function(id){
+    delete S.spirits.owned[id];
+    var ei = S.spirits.equipped.indexOf(id); if(ei >= 0) S.spirits.equipped.splice(ei, 1);
+  });
+  var nextRar = RAR_ORDER[RAR_ORDER.indexOf(d1.rar) + 1];
+  var pool = SPIRITS.filter(function(x){ return x.rar === nextRar; });
+  var nd = pool[Math.floor(Math.random() * pool.length)];
+  if(spiritStars(nd.id) > 0 && spiritStars(nd.id) < 5){ S.spirits.owned[nd.id]++; toast('🔀 Hợp thành ra ' + nd.icon + ' ' + nd.name + ' [' + RAR_NAME[nextRar] + '] — trùng nên tăng sao lên ' + S.spirits.owned[nd.id] + '!'); }
+  else if(spiritStars(nd.id) >= 5){ S.gold += 100; toast('🔀 Hợp thành ra ' + nd.name + ' nhưng đã 5 sao — đổi +100 vàng'); }
+  else { S.spirits.owned[nd.id] = 1; toast('🔀 HỢP THÀNH CÔNG! Ra ' + nd.icon + ' ' + nd.name + ' [' + RAR_NAME[nextRar] + ']'); logLoot('🐾 Hợp thành linh thú: ' + nd.name + ' [' + RAR_NAME[nextRar] + ']'); }
+  fuseSel = [];
+  beep(920, 0.25); rebuildPet(); updHud(); renderSpirits(); saveGame(true);
+}
+
+/* ================= DANH HIEU ================= */
+var TITLES = [
+  { id: 'langvuong', name: '🐺 Săn Lang Vương', stat: { atk: 3 }, desc: 'Hạ Hắc Lang Vương 1 lần' },
+  { id: 'cuonghoa', name: '🔨 Bậc Thầy Cường Hoá', stat: { atk: 5 }, desc: 'Có món đồ cường hoá +12' },
+  { id: 'nguthu', name: '🐾 Ngự Thú Tông Sư', stat: { hp: 40 }, desc: 'Sở hữu 7 linh thú' },
+  { id: 'bicanh', name: '🌀 Chúa Tể Bí Cảnh', stat: { def: 3 }, desc: 'Thắng Bí Cảnh 5 lần' },
+  { id: 'maphuong', name: '🟪 Ma Phương Hành Giả', stat: { mp: 15 }, desc: 'Hoàn thành Ma Phương 5 lượt' },
+  { id: 'daigia', name: '💰 Đại Gia Vân Châu', stat: { hp: 30 }, desc: 'Có 10.000 vàng trong túi' }
+];
+function titleDef(id){ for(var i = 0; i < TITLES.length; i++) if(TITLES[i].id === id) return TITLES[i]; return null; }
+function titleUnlocked(t){
+  if(t.id === 'langvuong') return (S.killsByType['Hắc Lang Vương'] || 0) >= 1;
+  if(t.id === 'cuonghoa') return achStat('enh') >= 12;
+  if(t.id === 'nguthu') return Object.keys(S.spirits.owned || {}).length >= 7;
+  if(t.id === 'bicanh') return (S.bcClears || 0) >= 5;
+  if(t.id === 'maphuong') return (S.mpClears || 0) >= 5;
+  if(t.id === 'daigia') return S.gold >= 10000;
+  return false;
+}
+function titleBonus(key){
+  var t = S.title ? titleDef(S.title) : null;
+  return (t && t.stat[key]) || 0;
+}
+function titleName(){ var t = S.title ? titleDef(S.title) : null; return t ? t.name : ''; }
+function titleStatText(t){
+  return Object.keys(t.stat).map(function(k){ return '+' + t.stat[k] + ' ' + ({ atk: 'Công', def: 'Thủ', hp: 'HP', mp: 'MP' })[k]; }).join(' · ');
+}
+function renderTitles(){
+  var el = document.getElementById('titleList'); if(!el) return;
+  el.innerHTML = TITLES.map(function(t){
+    var un = titleUnlocked(t); var worn = S.title === t.id;
+    return '<div class="slotRow' + (worn ? ' sel' : '') + '"><span><b>' + t.name + '</b> · ' + titleStatText(t) + '<br><span style="color:#adb5bd">' + t.desc + (un ? '' : ' · 🔒 chưa mở') + '</span></span>' + (worn ? '<button disabled>Đang đeo</button>' : '<button data-title="' + t.id + '"' + (un ? '' : ' disabled') + '>Đeo</button>') + '</div>';
+  }).join('') + (S.title ? '<div style="margin-top:6px"><button data-title="">❌ Tháo danh hiệu</button></div>' : '');
+}
+function wearTitle(id){
+  if(id && !titleUnlocked(titleDef(id))) return;
+  S.title = id;
+  toast(id ? '👑 Đã đeo danh hiệu: ' + titleName() : '👑 Đã tháo danh hiệu');
   updHud(); renderAch(); saveGame(true);
 }
 
@@ -1684,6 +1813,7 @@ function renderEquip(){
   if(it2.enh >= 15){ document.getElementById('enhInfo').textContent = it2.name + ' đã đạt +15 (tối đa)'; enhBtn.disabled = true; enhBtn.style.opacity = 0.5; }
   else { var c = enhCost(it2); document.getElementById('enhInfo').innerHTML = '<b>' + it2.name + '</b> +' + it2.enh + ' → +' + (it2.enh+1) + ' · Giá: ' + c.gold + ' vàng' + (c.ht ? ' + ' + c.ht + ' Huyền Thiết' : '') + ' · Tỉ lệ thành công <b>' + Math.round(ENH_RATE[it2.enh+1]*100) + '%</b>'; enhBtn.disabled = false; enhBtn.style.opacity = 1; }
   document.getElementById('bagCnt').textContent = '(' + S.bag.length + '/' + bagCap() + ')';
+  document.getElementById('autoPotBtn').textContent = S.autoPot ? 'Đang bật' : 'Đang tắt';
   var bx = document.getElementById('bagExpBtn');
   if(S.bagExp >= 5){ bx.textContent = 'Túi đã tối đa (140 ô)'; bx.disabled = true; }
   else { bx.textContent = '➕ Mở rộng +20 ô (' + (400 * (S.bagExp + 1)) + ' vàng)'; bx.disabled = false; }
@@ -1764,7 +1894,11 @@ function bindPanels(){
   document.getElementById('ncList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b && !b.disabled) trainNC(b.getAttribute('data-nc')); });
   document.getElementById('codexList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b && !b.disabled) claimCodex(b.getAttribute('data-codex')); });
   document.getElementById('summonBtn').addEventListener('click', summonSpirit);
-  document.getElementById('spiritList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b) toggleSpiritEquip(b.getAttribute('data-spirit')); });
+  document.getElementById('spiritList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(!b) return; if(b.hasAttribute('data-fuse')) toggleFuse(b.getAttribute('data-fuse')); else toggleSpiritEquip(b.getAttribute('data-spirit')); });
+  document.getElementById('fuseBtn').addEventListener('click', doFuse);
+  document.getElementById('skillList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b && !b.disabled) upgradeSkill(parseInt(b.getAttribute('data-skill'), 10)); });
+  document.getElementById('titleList').addEventListener('click', function(e){ var b = e.target.closest('button'); if(b && !b.disabled) wearTitle(b.getAttribute('data-title')); });
+  document.getElementById('autoPotBtn').addEventListener('click', function(){ S.autoPot = !S.autoPot; document.getElementById('autoPotBtn').textContent = S.autoPot ? 'Đang bật' : 'Đang tắt'; toast('🧪 Tự uống bình: ' + (S.autoPot ? 'BẬT' : 'TẮT')); saveGame(true); });
   document.querySelectorAll('.pClose').forEach(function(b){ b.addEventListener('click', function(){ document.getElementById(b.getAttribute('data-close')).style.display = 'none'; }); });
   document.getElementById('equipSlots').addEventListener('click', function(e){
     var row = e.target.closest('.slotRow'); if(row){ S.enhSlot = row.getAttribute('data-slot'); renderEquip(); }
@@ -1829,7 +1963,7 @@ document.getElementById('playBtn').addEventListener('click', function(){
   if(saveExisted && chosen !== S.cls){
     if(!confirm('Đã có nhân vật ' + cls().name + ' (cấp ' + S.lvl + '). Tạo nhân vật ' + CLASSES[chosen].name + ' mới sẽ XOÁ tiến trình cũ. Tiếp tục?')) return;
     try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
-    S.cls = chosen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; S.reqOffers = []; S.reqActive = []; S.reqDay = ''; S.bagExp = 0; S.potionsBig = 0; S.luckStones = 0; S.bcClears = 0; S.mpClears = 0; S.summons = 0; S.reqDone = 0; S.achClaimed = {}; skillCd = { s1: 0, s2: 0, ult: 0 };
+    S.cls = chosen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; S.reqOffers = []; S.reqActive = []; S.reqDay = ''; S.bagExp = 0; S.potionsBig = 0; S.luckStones = 0; S.bcClears = 0; S.mpClears = 0; S.summons = 0; S.reqDone = 0; S.achClaimed = {}; S.skillLvl = { s1: 1, s2: 1, ult: 1 }; S.skillEss = 0; S.title = ''; S.autoPot = true; skillCd = { s1: 0, s2: 0, ult: 0 };
     hp = maxHp(); mp = maxMp(); saveExisted = false;
   } else if(!saveExisted){
     S.cls = chosen; S.equip = starterEquip(); dailyReset(); hp = maxHp(); mp = maxMp();

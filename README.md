@@ -1,11 +1,17 @@
-# Huyền Kiếm Online — bản V1.7 (chơi thử)
+# Huyền Kiếm Online — bản V1.8 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-## Mới trong V1.7
+## Mới trong V1.8
+- **🔀 Hợp thành linh thú**: 2 linh thú cùng phẩm → 1 linh thú ngẫu nhiên phẩm cao hơn (Thường → Hiếm → Quý → Truyền thuyết), linh thú thừa từ nay có chỗ dùng
+- **⚔️ Cường hoá kỹ năng**: quái rơi 🔷 Tinh Hoa Kỹ Năng (tinh anh/boss/Bí Cảnh/Ma Phương rơi nhiều) — nâng cấp từng kỹ năng, mỗi cấp +8% sát thương/hồi phục, tối đa cấp 10
+- **👑 Danh hiệu**: 6 danh hiệu mở khoá theo thành tích (Săn Lang Vương, Bậc Thầy Cường Hoá, Ngự Thú Tông Sư…) — đeo vào cộng chỉ số và hiện ngay dưới tên nhân vật
+- **🧪 Tự uống bình**: HP dưới 35% nhân vật tự dùng bình máu (ưu tiên Bình Lớn), bật/tắt trong panel Trang bị — đánh AUTO yên tâm hơn
+
+## Từ V1.7
 - **🧭 Tìm boss & di chuyển nhanh**: bấm vào dòng đếm ngược boss (góc phải) để nhân vật **tự chạy đến Hắc Lang Vương** và tự đánh; **bấm thẳng vào bản đồ nhỏ** để tự chạy tới điểm bất kỳ; nút **🗺️ Bản đồ** liệt kê 6 địa điểm với 2 cách đi: 🚶 Đi tới (miễn phí) hoặc ⚡ Dịch chuyển ngay (phí theo khoảng cách)
 - **👜 Túi đồ lớn hơn**: 40 ô từ đầu, mở rộng +20 ô/lần bằng vàng, tối đa 140 ô
 - **🟪 Ma Phương** (đúng chất MIR4): đấu trường riêng theo **thời gian 5 phút**, quái tràn ra liên tục và mạnh dần, rơi nhiều Huyền Thiết — 2 lượt/ngày, mở từ cấp 8, tách riêng với Bí Cảnh theo đợt
