@@ -1,11 +1,16 @@
-# Huyền Kiếm Online — bản V1.8 (chơi thử)
+# Huyền Kiếm Online — bản V1.9 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-## Mới trong V1.8
+## Mới trong V1.9
+- **👑 Boss bãi theo giờ — nay có 3 boss lệch giờ nhau**: 🐺 Hắc Lang Vương (Rừng Thanh Lam), 🗿 Thạch Ma Vương cấp 16 (Đáy Mỏ), 👹 Sơn Quỷ Vương cấp 14 (rừng sâu) — cứ ~5 phút lại có 1 boss xuất hiện. Dòng boss ở góc phải luôn hiện sự kiện gần nhất, bấm vào để tự chạy tới; panel 🗺️ Bản đồ có mục **Boss bãi theo giờ** xem lịch cả 3 boss kèm nút đi tới/dịch chuyển. Hạ boss mới cũng tính vào Sưu Tầm
+- **🐴 Thú cưỡi**: Ngựa Thảo Nguyên (+8% tốc chạy), Kỳ Lân Non (+15% tốc, +5 Công), Hắc Báo Săn Mồi (+22% tốc, +10 Công, +50 HP) — mua trong panel Linh Thú, thú hiện hình và nhân vật cưỡi thật trong game
+- **🐾 Linh thú lên cấp**: mỗi linh thú nâng tới cấp 10 bằng vàng + Huyền Thiết, mỗi cấp +10% chỉ số (cộng dồn với sao và hợp thành)
+
+## Từ V1.8
 - **🔀 Hợp thành linh thú**: 2 linh thú cùng phẩm → 1 linh thú ngẫu nhiên phẩm cao hơn (Thường → Hiếm → Quý → Truyền thuyết), linh thú thừa từ nay có chỗ dùng
 - **⚔️ Cường hoá kỹ năng**: quái rơi 🔷 Tinh Hoa Kỹ Năng (tinh anh/boss/Bí Cảnh/Ma Phương rơi nhiều) — nâng cấp từng kỹ năng, mỗi cấp +8% sát thương/hồi phục, tối đa cấp 10
 - **👑 Danh hiệu**: 6 danh hiệu mở khoá theo thành tích (Săn Lang Vương, Bậc Thầy Cường Hoá, Ngự Thú Tông Sư…) — đeo vào cộng chỉ số và hiện ngay dưới tên nhân vật
