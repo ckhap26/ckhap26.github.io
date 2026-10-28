@@ -1,11 +1,20 @@
-# Huyền Kiếm Online — bản V1.9 (chơi thử)
+# Huyền Kiếm Online — bản V2.0 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
 
-## Mới trong V1.9
+## Mới trong V2.0 — bố cục theo phong cách MIR4
+- **🗺️ Bản đồ phân cấp 2 lớp**: mở Bản đồ thấy **bản đồ đại lục Vân Châu** với 3 khu vực bấm được → vào **chi tiết từng khu**: điểm đến, boss bãi của khu đó, và riêng Thành Thiên Vân có danh sách **cổng cảnh** (Bí Cảnh / Ma Phương / Tháp) bấm vào là vào ngay — đúng như cách MIR4 tổ chức Continent Map → Area → Map
+- **🎒 Trang bị kiểu MIR4**: thẻ hồ sơ nhân vật (phái, cấp, lực chiến, chỉ số, tiền tệ) + đồ đang mặc dạng **ô lưới** + túi đồ dạng lưới 2 cột
+- **📋 Ủy thác theo khu vực**: việc được nhóm theo Rừng / Mỏ / Khu đặc biệt / Khắp Vân Châu, mỗi việc ghi **Lực chiến khuyến nghị** như Mission của MIR4
+- **🛒 Cửa Hàng**: mua Bình Máu / Bình Lớn / Đá Cường Hoá / Vé Triệu Hồi / Hộp Huyền Thiết / Đá Ma Thuật bằng vàng (+ Huyền Thiết)
+- **🔮 Đá Ma Thuật & 🧩 Mảnh Thần Bí**: boss bãi rơi Đá Ma Thuật (Công/Thủ/Sinh Lực) — **khảm thẳng vào đồ đang mặc** cộng chỉ số vĩnh viễn; Mảnh Thần Bí (boss bãi, rã đồ bậc 5+) ghép 10 mảnh ở Lò Rèn → trang bị bậc 5–6
+- **🗼 Tháp Vân Châu**: leo tháp không giới hạn tầng, quái mạnh dần theo tầng, qua tầng nhận vàng + Huyền Thiết, mỗi 5 tầng +1 Đá Ma Thuật, mỗi 10 tầng +1 Vé — vào từ Bản đồ → Thành Thiên Vân, có ghi kỷ lục tầng
+- Thanh EXP chuyển thành **thanh ngang toàn màn hình** ở đáy như MIR4
+
+## Từ V1.9
 - **👑 Boss bãi theo giờ — nay có 3 boss lệch giờ nhau**: 🐺 Hắc Lang Vương (Rừng Thanh Lam), 🗿 Thạch Ma Vương cấp 16 (Đáy Mỏ), 👹 Sơn Quỷ Vương cấp 14 (rừng sâu) — cứ ~5 phút lại có 1 boss xuất hiện. Dòng boss ở góc phải luôn hiện sự kiện gần nhất, bấm vào để tự chạy tới; panel 🗺️ Bản đồ có mục **Boss bãi theo giờ** xem lịch cả 3 boss kèm nút đi tới/dịch chuyển. Hạ boss mới cũng tính vào Sưu Tầm
 - **🐴 Thú cưỡi**: Ngựa Thảo Nguyên (+8% tốc chạy), Kỳ Lân Non (+15% tốc, +5 Công), Hắc Báo Săn Mồi (+22% tốc, +10 Công, +50 HP) — mua trong panel Linh Thú, thú hiện hình và nhân vật cưỡi thật trong game
 - **🐾 Linh thú lên cấp**: mỗi linh thú nâng tới cấp 10 bằng vàng + Huyền Thiết, mỗi cấp +10% chỉ số (cộng dồn với sao và hợp thành)
