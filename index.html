@@ -85,6 +85,7 @@
   .eqGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
   .eqCard{flex-direction:column;align-items:flex-start;gap:2px}
   .bagGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .itIcon{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:2px solid;border-radius:9px;font-size:16px;background:rgba(255,255,255,.06);margin-right:7px;vertical-align:middle}
   .bagCard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:6px 8px;font-size:12px}
   .bagCard button{font-size:11px;padding:2px 6px}
   .zoneHead{margin:10px 0 5px;font-weight:700;color:#ffd166}
@@ -106,6 +107,9 @@
   .clsRow .classCard{margin-top:0;flex:1;min-width:200px;cursor:pointer;opacity:.75;transition:all .15s}
   .clsRow .classCard.sel{opacity:1;border-color:#ffd166;background:rgba(255,209,102,.13);transform:translateY(-3px)}
   .classCard{margin-top:22px;background:rgba(255,255,255,.06);border:2px solid #ffd166;border-radius:14px;padding:14px 18px;max-width:420px}
+  .genRow{display:flex;gap:10px;margin-top:14px;justify-content:center}
+  .genChip{cursor:pointer;padding:8px 24px;border-radius:999px;border:2px solid rgba(255,255,255,.35);color:#dee2e6;font-weight:700;font-size:15px;background:rgba(255,255,255,.05)}
+  .genChip.sel{border-color:#ffd166;color:#ffd166;background:rgba(255,209,102,.13)}
   .classCard h3{color:#ffd166;font-size:19px}
   .classCard p{font-size:13px;line-height:1.55;color:#dee2e6;margin-top:5px}
   #playBtn{margin-top:24px;background:linear-gradient(180deg,#f77f00,#d62828);border:none;color:#fff;font-size:20px;font-weight:900;padding:14px 52px;border-radius:30px;cursor:pointer;box-shadow:0 6px 24px rgba(214,40,40,.5);letter-spacing:1px}
@@ -167,7 +171,7 @@
 
 <div id="startScr">
   <h1>⚔️ HUYỀN KIẾM ONLINE</h1>
-  <h2>V2.0 — Bố cục kiểu MIR4: bản đồ phân cấp · cửa hàng · tháp · đá ma thuật</h2>
+  <h2>V2.1 — Nhân vật 3D mới: 3 phái × Nam/Nữ · đồ theo bậc hiện trên người</h2>
   <div class="clsRow">
     <div class="classCard sel" data-cls="kiem">
       <h3>🗡️ Kiếm Tông</h3>
@@ -182,13 +186,17 @@
       <p>Đánh xa · Hồi máu &amp; độc<br>Hồi Xuân (hồi máu) · Thực Cốt Phù (độc) · Vạn Dược Tề Thiên</p>
     </div>
   </div>
+  <div class="genRow">
+    <div class="genChip sel" data-gen="nam">♂ Nam</div>
+    <div class="genChip" data-gen="nu">♀ Nữ</div>
+  </div>
   <button id="playBtn">▶ VÀO GAME</button>
   <div class="helpTxt">
     <b>PC:</b> WASD di chuyển · giữ chuột phải / kéo để xoay camera · Space hoặc nút ⚔️ đánh · 1/2/3 dùng skill · F đào mỏ · bấm nút AUTO để tự đánh<br>
     <b>Điện thoại:</b> joystick trái di chuyển · kéo nửa phải màn hình xoay camera · các nút skill bên phải
   </div>
   <button id="resetSave">Xoá dữ liệu lưu &amp; chơi lại từ đầu</button>
-  <div id="verTag">V2.0 — đồ hoạ khối thử nghiệm · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
+  <div id="verTag">V2.1 — nhân vật dựng theo mẫu thiết kế · Tiến trình tự lưu trên máy này · Có Xuất/Nhập dữ liệu trong mục Trang bị</div>
 </div>
 
 <div id="hud">
@@ -379,7 +387,7 @@ function xpNeed(lvl){ return Math.round(CFG.xpCurveBase * Math.pow(lvl, CFG.xpCu
 
 /* ================= STATE ================= */
 var S = {
-  cls: 'kiem', lvl: 1, xp: 0, gold: 0, ht: 0, potions: 5,
+  cls: 'kiem', gender: 'nam', lvl: 1, xp: 0, gold: 0, ht: 0, potions: 5,
   questIdx: 0, questProg: 0, started: false, auto: false, sound: true,
   equip: null, bag: [], daily: null, enhSlot: 'weapon',
   nc: {}, spirits: { owned: {}, equipped: [] }, tickets: 0, killsByType: {}, codexClaimed: {},
@@ -424,11 +432,12 @@ var QUESTS = [
 /* ================= SAVE / LOAD ================= */
 var SAVE_KEY = 'huyenKiemGreybox_v1';
 function saveGame(silent){
-  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed, reqOffers: S.reqOffers, reqActive: S.reqActive, reqDay: S.reqDay, bagExp: S.bagExp, potionsBig: S.potionsBig, luckStones: S.luckStones, bcClears: S.bcClears, mpClears: S.mpClears, summons: S.summons, reqDone: S.reqDone, achClaimed: S.achClaimed, skillLvl: S.skillLvl, skillEss: S.skillEss, title: S.title, autoPot: S.autoPot, mountOwned: S.mountOwned, mountEq: S.mountEq, stones: S.stones, shards: S.shards, towerBest: S.towerBest })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ v: 3, cls: S.cls, gender: S.gender, lvl: S.lvl, xp: S.xp, gold: S.gold, ht: S.ht, potions: S.potions, questIdx: S.questIdx, questProg: S.questProg, equip: S.equip, bag: S.bag, daily: S.daily, nc: S.nc, spirits: S.spirits, tickets: S.tickets, killsByType: S.killsByType, codexClaimed: S.codexClaimed, reqOffers: S.reqOffers, reqActive: S.reqActive, reqDay: S.reqDay, bagExp: S.bagExp, potionsBig: S.potionsBig, luckStones: S.luckStones, bcClears: S.bcClears, mpClears: S.mpClears, summons: S.summons, reqDone: S.reqDone, achClaimed: S.achClaimed, skillLvl: S.skillLvl, skillEss: S.skillEss, title: S.title, autoPot: S.autoPot, mountOwned: S.mountOwned, mountEq: S.mountEq, stones: S.stones, shards: S.shards, towerBest: S.towerBest })); if(!silent) toast('💾 Đã lưu'); }catch(e){}
 }
 function applyLoaded(d){
   if(!d) return;
   S.cls = CLASSES[d.cls] ? d.cls : 'kiem';
+  S.gender = (d.gender === 'nu') ? 'nu' : 'nam';
   S.lvl = d.lvl || 1; S.xp = d.xp || 0; S.gold = d.gold || 0; S.ht = d.ht || 0;
   S.potions = (d.potions == null ? 5 : d.potions);
   S.questIdx = Math.min(d.questIdx || 0, QUESTS.length - 1); S.questProg = d.questProg || 0;
@@ -474,6 +483,72 @@ function cyl(rt,rb,h,c,x,y,z,parent,seg){
   m.position.set(x||0,y||0,z||0); (parent||scene).add(m); return m;
 }
 
+function cone(r,h,c,x,y,z,parent){
+  var m = new THREE.Mesh(new THREE.ConeGeometry(r,h,8), mat(c));
+  m.position.set(x||0,y||0,z||0); (parent||scene).add(m); return m;
+}
+function shade(hex, f){ return new THREE.Color(hex).multiplyScalar(f).getHex(); }
+
+function buildTownNpc(x, z, role, rotY){
+  var g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY || 0; scene.add(g);
+  var skin = 0xf1c27d;
+  var robeC = role === 'elder' ? 0xf2c14e : role === 'merchant' ? 0x2a9d8f : role === 'smith' ? 0x6d4c41 : 0x546e7a;
+  cyl(0.11, 0.13, 0.6, 0x37474f, -0.15, 0.4, 0, g); cyl(0.11, 0.13, 0.6, 0x37474f, 0.15, 0.4, 0, g);
+  cyl(0.32, 0.48, 0.95, robeC, 0, 0.85, 0, g);
+  box(0.56, 0.8, 0.4, robeC, 0, 1.65, 0, g);
+  box(0.58, 0.13, 0.42, 0x5d4037, 0, 1.28, 0, g);
+  cyl(0.08, 0.09, 0.52, robeC, -0.36, 1.68, 0, g); cyl(0.08, 0.09, 0.52, robeC, 0.36, 1.68, 0, g);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.33, 10, 10), mat(skin)); head.position.y = 2.28; g.add(head);
+  if(role === 'elder'){
+    box(0.3, 0.42, 0.06, 0xf5f5f5, 0, 1.98, 0.3, g);
+    var bun = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), mat(0xd9d9d9)); bun.position.set(0, 2.62, -0.02); g.add(bun);
+    cyl(0.03, 0.03, 1.7, 0x6d4c41, 0.55, 1.15, 0.15, g);
+    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd166, emissive: 0x664d00 })); orb.position.set(0.55, 2.05, 0.15); g.add(orb);
+  } else if(role === 'merchant'){
+    cone(0.52, 0.3, 0xd9c9a3, 0, 2.52, 0, g);
+    cyl(0.2, 0.24, 0.18, 0xd9c9a3, 0, 2.4, 0, g);
+    box(0.22, 0.28, 0.12, 0xffd166, 0.3, 1.15, 0.22, g);
+    box(0.3, 0.2, 0.2, 0x8d6e63, -0.42, 1.3, 0.1, g);
+  } else if(role === 'smith'){
+    box(0.5, 0.62, 0.05, 0x37474f, 0, 1.6, 0.21, g);
+    cyl(0.075, 0.085, 0.5, skin, -0.37, 1.7, 0, g); cyl(0.075, 0.085, 0.5, skin, 0.37, 1.7, 0, g);
+    box(0.56, 0.12, 0.4, 0xc92a2a, 0, 2.44, 0, g);
+    cyl(0.03, 0.03, 0.34, 0x4a3226, 0.44, 1.62, 0.1, g);
+    box(0.2, 0.12, 0.12, 0x616161, 0.44, 1.44, 0.1, g);
+  } else {
+    var helm = new THREE.Mesh(new THREE.SphereGeometry(0.36, 10, 8), mat(0x90a4ae)); helm.position.y = 2.36; g.add(helm);
+    cyl(0.38, 0.38, 0.05, 0x90a4ae, 0, 2.3, 0, g);
+    box(0.58, 0.82, 0.42, 0x78909c, 0, 1.65, 0, g);
+    cyl(0.025, 0.025, 2.3, 0x6d4c41, 0.48, 1.7, 0, g);
+    cone(0.06, 0.3, 0xd7dde8, 0.48, 3.0, 0, g);
+    box(0.34, 0.5, 0.06, 0x8d6e63, -0.46, 1.55, 0.05, g);
+  }
+  return g;
+}
+function buildStall(x, z){
+  var g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = 0.5; scene.add(g);
+  box(2.6, 0.12, 1.1, 0x8d6e63, 0, 1.0, 0, g);
+  box(2.4, 0.7, 0.9, 0x6d4c41, 0, 0.55, 0, g);
+  cyl(0.06, 0.06, 2.4, 0x5d4037, -1.2, 1.2, -0.4, g); cyl(0.06, 0.06, 2.4, 0x5d4037, 1.2, 1.2, -0.4, g);
+  cyl(0.06, 0.06, 2.4, 0x5d4037, -1.2, 1.2, 0.4, g); cyl(0.06, 0.06, 2.4, 0x5d4037, 1.2, 1.2, 0.4, g);
+  var awn = box(2.9, 0.08, 1.6, 0xc92a2a, 0, 2.35, 0, g); awn.rotation.x = 0.18;
+  var awn2 = box(2.9, 0.08, 0.5, 0xf5f5f5, 0, 2.42, -0.55, g); awn2.rotation.x = 0.18;
+  box(0.4, 0.3, 0.4, 0xd9c9a3, -0.8, 1.22, 0.1, g);
+  cyl(0.09, 0.11, 0.34, 0xe63946, -0.25, 1.24, 0.15, g);
+  cyl(0.09, 0.11, 0.34, 0x51cf66, 0.05, 1.24, 0.15, g);
+  cyl(0.09, 0.11, 0.34, 0x4cc9f0, 0.35, 1.24, 0.15, g);
+  var coin = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 8), new THREE.MeshLambertMaterial({ color: 0xffd166, emissive: 0x664d00 })); coin.position.set(0.85, 1.2, 0.1); g.add(coin);
+}
+function buildForge(x, z){
+  var g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = -0.9; scene.add(g);
+  box(1.1, 0.5, 0.7, 0x616161, 0, 0.25, 0, g);
+  box(0.5, 0.25, 0.4, 0x424242, 0, 0.62, 0, g);
+  box(0.34, 0.1, 0.3, 0x212121, 0, 0.78, 0, g);
+  box(1.3, 1.0, 0.9, 0x757575, 1.6, 0.5, -0.4, g);
+  var fire = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.4, 0.5), new THREE.MeshLambertMaterial({ color: 0xff9f1c, emissive: 0xd35400 })); fire.position.set(1.6, 0.55, 0.1); g.add(fire);
+  cyl(0.16, 0.2, 1.1, 0x616161, 1.6, 1.6, -0.4, g);
+}
+
 function buildWorld(){
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x87b5d9);
@@ -511,12 +586,18 @@ function buildWorld(){
   });
   // City gate north
   box(3, 12, 3, 0x8a7f6a, -7, 6, 26); box(3, 12, 3, 0x8a7f6a, 7, 6, 26); box(17, 3, 4, 0x8d3b2f, 0, 13, 26);
-  // Quest NPC in city (golden block person)
-  var npc = new THREE.Group(); npc.position.set(5, 0, 52); scene.add(npc);
-  cyl(0.55, 0.7, 1.7, 0xf2c14e, 0, 0.85, 0, npc);
-  var nh = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 10), mat(0xf1c27d)); nh.position.y = 2.05; npc.add(nh);
-  var sign = box(0.18, 1.6, 0.18, 0x795548, 1.1, 0.8, 0, npc); box(1.5, 0.8, 0.1, 0xffd166, 1.1, 1.9, 0, npc);
+  // Town NPCs: quest elder, merchant + stall, blacksmith + forge, gate guards
+  buildTownNpc(5, 52, 'elder', 0);
+  var sign = box(0.18, 1.6, 0.18, 0x795548, 6.1, 0.8, 52, scene); box(1.5, 0.8, 0.1, 0xffd166, 6.1, 1.9, 52, scene);
   colliders.push({x:5, z:52, r:1.4});
+  buildTownNpc(-7, 54, 'merchant', 0.5);
+  buildStall(-8.8, 52.4);
+  colliders.push({x:-7, z:54, r:1.4}); colliders.push({x:-8.8, z:52.4, r:1.7});
+  buildTownNpc(12, 66, 'smith', -0.9);
+  buildForge(13.8, 64.4);
+  colliders.push({x:12, z:66, r:1.4}); colliders.push({x:13.8, z:64.4, r:1.6});
+  buildTownNpc(-5.2, 23, 'guard', Math.PI); buildTownNpc(5.2, 23, 'guard', Math.PI);
+  colliders.push({x:-5.2, z:23, r:1.0}); colliders.push({x:5.2, z:23, r:1.0});
   // Lanterns
   [[-12,58],[12,58],[-12,76],[12,76]].forEach(function(p){ cyl(0.09,0.09,3.4,0x5d4037,p[0],1.7,p[1]); box(0.7,0.9,0.7,0xffb703,p[0],3.6,p[1]); colliders.push({x:p[0],z:p[1],r:0.6}); });
 
@@ -553,34 +634,85 @@ function makeMineNode(x, z){
   colliders.push({x:x, z:z, r:1.6});
 }
 
+var talis = [];
+var robeMats = [], trimSilver = [], trimGold = [], hatMesh = null, hatGem = null, bootMeshes = [];
 function makePlayer(){
+  if(player){ scene.remove(player); }
+  for(var ti = 0; ti < talis.length; ti++) scene.remove(talis[ti]);
+  talis = [];
   player = new THREE.Group(); scene.add(player);
-  var C = cls();
-  cyl(0.52, 0.66, 1.55, C.color, 0, 0.95, 0, player);
-  var head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 12), mat(0xf1c27d)); head.position.y = 2.05; player.add(head);
-  cyl(0.46, 0.46, 0.22, 0x22223b, 0, 2.32, 0, player);
-  box(0.34, 0.5, 0.1, 0xd62828, 0, 1.28, 0.6, player);
-  swordPivot = new THREE.Group(); swordPivot.position.set(0.72, 1.45, 0); player.add(swordPivot);
-  if(S.cls === 'phap'){
-    cyl(0.05, 0.05, 1.9, 0x6d4c41, 0, 0.45, 0, swordPivot);
-    weaponGlowMat = new THREE.MeshLambertMaterial({ color: 0xc77dff, emissive: 0x5a189a });
-    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.21, 10, 10), weaponGlowMat); orb.position.y = 1.45; swordPivot.add(orb);
-    swordPivot.rotation.z = -0.25;
-  } else if(S.cls === 'duoc'){
-    cyl(0.05, 0.05, 1.3, 0x8d6e63, 0, 0.3, 0, swordPivot);
-    weaponGlowMat = new THREE.MeshLambertMaterial({ color: 0x95d5b2, emissive: 0x1b4332 });
-    for(var wi = -1; wi <= 1; wi++){ var w = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.65, 0.07), weaponGlowMat); w.position.set(wi*0.13, 1.15, 0); w.rotation.z = wi*0.28; swordPivot.add(w); }
-    swordPivot.rotation.z = -0.3;
-  } else {
-    box(0.09, 0.3, 0.09, 0x6d4c41, 0, -0.1, 0, swordPivot);
-    weaponGlowMat = new THREE.MeshLambertMaterial({ color: 0xced4da, emissive: 0x000000 });
-    var blade = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.25, 0.16), weaponGlowMat); blade.position.y = 0.62; swordPivot.add(blade);
-    swordPivot.rotation.z = -0.5;
+  var C = cls(); var fem = (S.gender === 'nu');
+  var robe = C.color;
+  var robeD = new THREE.Color(C.color).multiplyScalar(0.7).getHex();
+  var skin = 0xf1c27d, hairC = 0x201b26, leather = 0x5d4037, silver = 0xb8c0cc;
+  var shX = fem ? 0.40 : 0.47, torsoW = fem ? 0.54 : 0.64;
+  // legs + boots
+  cyl(0.11, 0.13, 0.62, 0x2e3440, -0.16, 0.42, 0, player);
+  cyl(0.11, 0.13, 0.62, 0x2e3440,  0.16, 0.42, 0, player);
+  bootMeshes = [box(0.2, 0.14, 0.36, 0x3a2e28, -0.16, 0.07, 0.05, player), box(0.2, 0.14, 0.36, 0x3a2e28, 0.16, 0.07, 0.05, player)];
+  // robe skirt + torso + inner panel + belt
+  cyl(0.33, fem ? 0.56 : 0.5, 0.95, robe, 0, 0.85, 0, player);
+  box(torsoW, 0.82, 0.42, robe, 0, 1.66, 0, player);
+  box(torsoW * 0.52, 0.58, 0.03, 0xe9e4d8, 0, 1.74, 0.215, player);
+  box(torsoW + 0.07, 0.15, 0.47, leather, 0, 1.27, 0, player);
+  box(0.16, 0.1, 0.03, 0xd4af37, 0, 1.27, 0.245, player);
+  trimSilver = [box(torsoW + 0.04, 0.07, 0.45, silver, 0, 2.02, 0, player), cyl(0.335, 0.35, 0.07, silver, 0, 1.33, 0, player)];
+  trimGold = [cyl(fem ? 0.51 : 0.46, fem ? 0.57 : 0.52, 0.09, 0xd4af37, 0, 0.42, 0, player), box(0.2, 0.2, 0.03, 0xd4af37, 0, 1.82, 0.225, player)];
+  hatMesh = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.035, 6, 14), mat(leather)); hatMesh.position.set(0, 2.56, 0); hatMesh.rotation.x = Math.PI / 2 - 0.25; player.add(hatMesh);
+  hatGem = new THREE.Mesh(new THREE.OctahedronGeometry(0.07), new THREE.MeshLambertMaterial({ color: 0x67e8f9, emissive: 0x155e75 })); hatGem.position.set(0, 2.58, 0.3); player.add(hatGem);
+  // arms on shoulder pivots
+  function arm(side){
+    var p = new THREE.Group(); p.position.set(side * shX, 1.98, 0); player.add(p);
+    var sl = (S.cls === 'phap') ? 0.17 : 0.115;
+    cyl(sl * 0.75, sl, 0.52, robe, 0, -0.24, 0, p);
+    cyl(0.07, 0.08, 0.4, leather, 0, -0.66, 0, p);
+    var hand = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), mat(skin)); hand.position.y = -0.9; p.add(hand);
+    p.rotation.z = side * 0.10;
+    return p;
   }
+  var armL = arm(-1), armR = arm(1);
+  // class signatures on body
+  if(S.cls === 'kiem'){
+    box(0.27, 0.12, 0.31, silver, -shX, 2.07, 0, player);
+    box(0.27, 0.12, 0.31, silver,  shX, 2.07, 0, player);
+    box(0.22, 0.1, 0.26, silver, -shX, 1.93, 0, player);
+    box(0.22, 0.1, 0.26, silver,  shX, 1.93, 0, player);
+  }
+  if(S.cls === 'duoc'){
+    var g1 = new THREE.Mesh(new THREE.SphereGeometry(0.26, 10, 10), mat(0xb08954)); g1.position.set(0, 1.45, -0.36); player.add(g1);
+    var g2 = new THREE.Mesh(new THREE.SphereGeometry(0.19, 10, 10), mat(0xbc9260)); g2.position.set(0, 1.82, -0.36); player.add(g2);
+    cyl(0.05, 0.05, 0.1, 0x8a6d3b, 0, 2.0, -0.36, player);
+    box(0.27, 0.3, 0.15, leather, -0.37, 1.16, 0.08, player);
+  }
+  // head + hair
+  var headG = new THREE.Group(); headG.position.y = 2.3; player.add(headG);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.34, 12, 12), mat(skin)); head.scale.y = 1.12; headG.add(head);
+  var cap = new THREE.Mesh(new THREE.SphereGeometry(0.36, 12, 12), mat(hairC)); cap.position.set(0, 0.08, -0.05); cap.scale.set(1, 0.9, 1); headG.add(cap);
+  var pinC = (S.cls === 'duoc') ? 0x2a9d8f : silver;
+  if(!fem){
+    var bun = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), mat(hairC)); bun.position.set(0, 0.4, -0.03); headG.add(bun);
+    cyl(0.018, 0.018, 0.34, pinC, 0, 0.42, -0.03, headG).rotation.z = Math.PI / 2.3;
+    if(S.cls === 'phap'){ box(0.05, 0.34, 0.02, 0x7b2cbf, 0.09, 0.22, -0.1, headG); }
+  } else if(S.cls === 'kiem'){
+    var pt = cyl(0.085, 0.14, 1.05, hairC, 0, -0.12, -0.4, headG); pt.rotation.x = 0.5; pt.rotation.z = 0.13;
+    cyl(0.08, 0.08, 0.08, silver, 0, 0.32, -0.16, headG);
+  } else if(S.cls === 'phap'){
+    box(0.52, 1.0, 0.09, hairC, 0, -0.32, -0.3, headG);
+    box(0.07, 0.3, 0.02, 0x9d4edd, 0.12, 0.28, -0.12, headG);
+  } else {
+    for(var b = 0; b < 3; b++){ var bs = new THREE.Mesh(new THREE.SphereGeometry(0.095 - b * 0.012, 8, 8), mat(hairC)); bs.position.set(0.31, 0.12 - b * 0.17, 0.14); headG.add(bs); }
+    var jp = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), mat(0x2a9d8f)); jp.position.set(0.28, 0.3, 0.12); headG.add(jp);
+  }
+  // weapon in right hand (swordPivot kept for the attack animation)
+  swordPivot = new THREE.Group(); swordPivot.position.set(0, -0.92, 0.03); armR.add(swordPivot);
+  lastWeaponKey = ''; buildWeapon();
   var ring = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.05, 24), new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide }));
-  ring.rotation.x = -Math.PI/2; ring.position.y = 0.03; player.add(ring);
+  ring.rotation.x = -Math.PI / 2; ring.position.y = 0.03; player.add(ring);
   player.position.set(0, 0, 66);
+  robeMats = [];
+  player.traverse(function(o){ if(o.isMesh && o.material && o.material.color){ var hx = o.material.color.getHex(); if(hx === robe || hx === robeD){ if(robeMats.indexOf(o.material) < 0){ o.material.userData.base = hx; robeMats.push(o.material); } } } });
   updWeaponGlow();
+  refreshPlayerLook();
 }
 function updWeaponGlow(){
   if(!weaponGlowMat || !S.equip) return;
@@ -588,6 +720,56 @@ function updWeaponGlow(){
   if(S.cls === 'kiem'){ weaponGlowMat.emissive.setHex(e >= 13 ? 0xff8800 : e >= 10 ? 0xcc9900 : 0x000000); }
   else if(S.cls === 'phap'){ weaponGlowMat.emissive.setHex(e >= 10 ? 0xb5179e : 0x5a189a); }
   else { weaponGlowMat.emissive.setHex(e >= 10 ? 0x40916c : 0x1b4332); }
+}
+
+var lastWeaponKey = '';
+function buildWeapon(){
+  if(!swordPivot || !S.equip || !S.equip.weapon) return;
+  var wt = S.equip.weapon.tier || 1;
+  var band = wt >= 5 ? 2 : wt >= 3 ? 1 : 0;
+  var key = S.cls + ':' + band;
+  if(key === lastWeaponKey) return; lastWeaponKey = key;
+  while(swordPivot.children.length) swordPivot.remove(swordPivot.children[0]);
+  swordPivot.rotation.set(0, 0, 0);
+  if(S.cls === 'phap'){
+    cyl(0.045, 0.055, 1.9, band === 0 ? 0x6d4c41 : 0x5d4037, 0, 0.3, 0, swordPivot);
+    if(band >= 1){ var r1 = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.02, 6, 12), mat(0xd4af37)); r1.position.y = 0.95; r1.rotation.x = Math.PI / 2; swordPivot.add(r1); }
+    weaponGlowMat = new THREE.MeshLambertMaterial({ color: band === 0 ? 0x9aa0a6 : 0x67e8f9, emissive: band === 0 ? 0x222222 : 0x5a189a });
+    if(band === 2){ var cr = new THREE.Mesh(new THREE.OctahedronGeometry(0.24), weaponGlowMat); cr.position.y = 1.38; swordPivot.add(cr); }
+    else { var orb = new THREE.Mesh(new THREE.SphereGeometry(band === 0 ? 0.15 : 0.2, 10, 10), weaponGlowMat); orb.position.y = 1.32; swordPivot.add(orb); }
+    var oring = new THREE.Mesh(new THREE.TorusGeometry(band === 2 ? 0.3 : 0.24, 0.03, 6, 14), mat(band === 2 ? 0xd4af37 : 0x8a6d3b)); oring.position.y = 1.32; oring.rotation.x = Math.PI / 2.4; swordPivot.add(oring);
+    swordPivot.rotation.z = -0.25;
+  } else if(S.cls === 'duoc'){
+    cyl(0.035, 0.035, 0.5, 0x8d6e63, 0, -0.05, 0, swordPivot);
+    weaponGlowMat = new THREE.MeshLambertMaterial({ color: band === 0 ? 0xd9c9a3 : band === 1 ? 0xa8d5ba : 0x95d5b2, emissive: band === 0 ? 0x000000 : 0x1b4332 });
+    for(var wi = -2; wi <= 2; wi++){ var w = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.62, 0.02), weaponGlowMat); w.position.set(wi * 0.055, 0.48, 0); w.rotation.z = wi * 0.26; swordPivot.add(w); }
+    if(band === 2){ var fg = new THREE.Mesh(new THREE.TorusGeometry(0.16, 0.02, 6, 12), mat(0xd4af37)); fg.position.y = 0.2; fg.rotation.x = Math.PI / 2; swordPivot.add(fg); }
+    swordPivot.rotation.z = -0.3;
+  } else {
+    cyl(0.04, 0.04, 0.3, 0x4a3226, 0, -0.08, 0, swordPivot);
+    box(0.2, 0.05, 0.05, band === 2 ? 0xd4af37 : 0x8a8f98, 0, 0.1, 0, swordPivot);
+    weaponGlowMat = new THREE.MeshLambertMaterial({ color: band === 0 ? 0x9aa0a6 : band === 1 ? 0xd7dde8 : 0xeaf2ff, emissive: 0x000000 });
+    var blade = new THREE.Mesh(new THREE.BoxGeometry(0.065, 1.2, 0.15), weaponGlowMat); blade.position.y = 0.72; swordPivot.add(blade);
+    if(band >= 1) cyl(0.012, 0.05, 0.3, 0x3b6ea5, 0, -0.28, 0, swordPivot);
+    if(band === 2){ var gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.06), new THREE.MeshLambertMaterial({ color: 0x67e8f9, emissive: 0x155e75 })); gem.position.y = 0.1; swordPivot.add(gem); }
+    swordPivot.rotation.z = -0.5;
+  }
+}
+function refreshPlayerLook(){
+  if(!player || !S.equip) return;
+  buildWeapon();
+  var at = (S.equip.armor && S.equip.armor.tier) || 1;
+  for(var i = 0; i < robeMats.length; i++){ var m = robeMats[i]; var c = new THREE.Color(m.userData.base); if(at >= 5) c.lerp(new THREE.Color(0xffffff), 0.30); else if(at >= 3) c.multiplyScalar(1.13); m.color.copy(c); }
+  trimSilver.forEach(function(x){ x.visible = at >= 3 && at < 5; });
+  trimGold.forEach(function(x){ x.visible = at >= 5; });
+  var ht2 = (S.equip.hat && S.equip.hat.tier) || 1;
+  if(hatMesh){ hatMesh.visible = ht2 >= 2; hatMesh.material.color.setHex(ht2 >= 5 ? 0xd4af37 : ht2 >= 3 ? 0xb8c0cc : 0x5d4037); }
+  if(hatGem) hatGem.visible = ht2 >= 5;
+  var st = (S.equip.boots && S.equip.boots.tier) || 1;
+  bootMeshes.forEach(function(b){ b.material.color.setHex(st >= 5 ? 0x8a6d3b : st >= 3 ? 0x4a3a30 : 0x3a2e28); });
+  updWeaponGlow();
+  var wt = (S.equip.weapon && S.equip.weapon.tier) || 1, enh = (S.equip.weapon && S.equip.weapon.enh) || 0;
+  if(wt >= 5 && enh < 10 && weaponGlowMat) weaponGlowMat.emissive.setHex(S.cls === 'kiem' ? 0x1d4ed8 : S.cls === 'phap' ? 0x7b2cbf : 0x1b4332);
 }
 
 /* ================= MONSTERS ================= */
@@ -598,16 +780,96 @@ var MTYPES = {
   'Trại Chủ':  { lvl: 8,  hp: 680, atk: 17, def: 7,  xp: 320, gold: [80,120], ht: [10,20],    color: 0x6d4c41, scale: 1.75, speed: 3.8, elite: true, zones: [[-95,-95]] },
   'Chúa Mỏ':   { lvl: 14, hp: 1350, atk: 25, def: 13, xp: 650, gold: [150,220], ht: [30,50],  color: 0x4a4a6a, scale: 2.1, speed: 2.8, elite: true, zones: [[95,-100]] }
 };
+function crownAt(vis, y){
+  var band = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.05, 6, 12), mat(0xd4af37)); band.position.y = y; band.rotation.x = Math.PI / 2; vis.add(band);
+  for(var i = 0; i < 4; i++){ var a = i / 4 * Math.PI * 2 + 0.4; cone(0.06, 0.22, 0xd4af37, Math.cos(a) * 0.28, y + 0.13, Math.sin(a) * 0.28, vis); }
+  var gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.07), new THREE.MeshLambertMaterial({ color: 0xff5964, emissive: 0x5c0a12 })); gem.position.set(0, y + 0.04, 0.3); vis.add(gem);
+}
+function banditBuild(t, vis, chief){
+  var skin = 0xe0ac69, pants = 0x37474f;
+  cyl(0.1, 0.12, 0.6, pants, -0.15, 0.4, 0, vis); cyl(0.1, 0.12, 0.6, pants, 0.15, 0.4, 0, vis);
+  box(0.19, 0.13, 0.32, 0x2b2118, -0.15, 0.06, 0.04, vis); box(0.19, 0.13, 0.32, 0x2b2118, 0.15, 0.06, 0.04, vis);
+  box(0.62, 0.82, 0.4, t.color, 0, 1.12, 0, vis);
+  box(0.64, 0.13, 0.42, 0x3e2723, 0, 0.78, 0, vis);
+  box(0.2, 0.34, 0.12, 0x5d4037, -0.4, 0.95, 0.1, vis);
+  var armR = new THREE.Group(); armR.position.set(0.38, 1.42, 0); vis.add(armR);
+  cyl(0.09, 0.1, 0.55, t.color, 0, -0.26, 0, armR);
+  cyl(0.035, 0.035, 0.26, 0x4a3226, 0, -0.62, 0.05, armR);
+  var bl = box(0.05, chief ? 0.95 : 0.75, 0.14, 0xd7dde8, 0, -1.05, 0.05, armR); bl.rotation.x = 0.35;
+  var armL = cyl(0.09, 0.1, 0.55, shade(t.color, 0.85), -0.38, 1.16, 0, vis); armL.rotation.z = 0.15;
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.33, 10, 10), mat(skin)); head.position.y = 1.86; vis.add(head);
+  box(0.52, 0.13, 0.52, chief ? 0x7f1d1d : 0xc92a2a, 0, 2.02, 0, vis);
+  box(0.07, 0.07, 0.03, 0x1d1a24, -0.11, 1.9, 0.31, vis); box(0.07, 0.07, 0.03, 0x1d1a24, 0.11, 1.9, 0.31, vis);
+  if(chief){ var col = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.09, 6, 12), mat(0xd8cfc0)); col.position.y = 1.5; col.rotation.x = Math.PI / 2 - 0.3; vis.add(col); }
+}
+function wolfBuild(t, vis, king){
+  var fur = t.color, dark = shade(t.color, 0.65);
+  box(0.78, 0.82, 1.6, fur, 0, 0.98, 0, vis);
+  box(0.84, 0.5, 0.5, dark, 0, 1.05, 0.62, vis);
+  var legP = [[-0.26, 0.55], [0.26, 0.55], [-0.26, -0.55], [0.26, -0.55]];
+  legP.forEach(function(p){ cyl(0.09, 0.11, 0.78, dark, p[0], 0.39, p[1], vis); });
+  var hg = new THREE.Group(); hg.position.set(0, 1.3, 0.95); vis.add(hg);
+  box(0.56, 0.52, 0.62, fur, 0, 0, 0, hg);
+  box(0.3, 0.26, 0.4, dark, 0, -0.1, 0.45, hg);
+  box(0.12, 0.08, 0.06, 0x14101c, 0, -0.02, 0.66, hg);
+  cone(0.11, 0.3, dark, -0.18, 0.38, -0.05, hg); cone(0.11, 0.3, dark, 0.18, 0.38, -0.05, hg);
+  box(0.08, 0.08, 0.04, 0xff2222, -0.15, 0.08, 0.32, hg); box(0.08, 0.08, 0.04, 0xff2222, 0.15, 0.08, 0.32, hg);
+  var f1 = cone(0.045, king ? 0.3 : 0.2, 0xf5f5f5, -0.08, -0.32, 0.5, hg); f1.rotation.x = Math.PI;
+  var f2 = cone(0.045, king ? 0.3 : 0.2, 0xf5f5f5, 0.08, -0.32, 0.5, hg); f2.rotation.x = Math.PI;
+  var tail = cyl(0.07, king ? 0.13 : 0.1, 0.85, dark, 0, 1.2, -0.95, vis); tail.rotation.x = -0.7;
+  if(king){ for(var i = 0; i < 6; i++){ var a = i / 6 * Math.PI * 2; var sp = cone(0.09, 0.42, 0x1d1a24, Math.cos(a) * 0.42, 1.32, 0.55 + Math.sin(a) * 0.3, vis); sp.rotation.x = -0.5; } }
+}
+function golemBuild(t, vis, king){
+  var stone = t.color, dark = shade(t.color, 0.7);
+  box(0.42, 0.7, 0.5, dark, -0.3, 0.35, 0, vis); box(0.42, 0.7, 0.5, dark, 0.3, 0.35, 0, vis);
+  box(1.3, 1.05, 0.85, stone, 0, 1.5, 0, vis);
+  box(1.36, 0.3, 0.9, dark, 0, 1.0, 0, vis);
+  var core = new THREE.Mesh(new THREE.OctahedronGeometry(0.2), new THREE.MeshLambertMaterial({ color: 0x2ce8c8, emissive: 0x0b5345 })); core.position.set(0, 1.6, 0.46); vis.add(core);
+  box(0.52, 0.42, 0.52, stone, -0.88, 2.05, 0, vis); box(0.52, 0.42, 0.52, stone, 0.88, 2.05, 0, vis);
+  box(0.36, 1.15, 0.36, dark, -0.88, 1.35, 0, vis); box(0.36, 1.15, 0.36, dark, 0.88, 1.35, 0, vis);
+  box(0.44, 0.34, 0.44, stone, -0.88, 0.72, 0, vis); box(0.44, 0.34, 0.44, stone, 0.88, 0.72, 0, vis);
+  box(0.52, 0.44, 0.52, dark, 0, 2.32, 0, vis);
+  box(0.3, 0.06, 0.03, 0x2ce8c8, 0, 2.34, 0.27, vis);
+  if(king){
+    var cr1 = new THREE.Mesh(new THREE.OctahedronGeometry(0.26), new THREE.MeshLambertMaterial({ color: 0xb197fc, emissive: 0x3b1470 })); cr1.position.set(-0.88, 2.45, 0); vis.add(cr1);
+    var cr2 = new THREE.Mesh(new THREE.OctahedronGeometry(0.26), new THREE.MeshLambertMaterial({ color: 0xb197fc, emissive: 0x3b1470 })); cr2.position.set(0.88, 2.45, 0); vis.add(cr2);
+    var cr3 = new THREE.Mesh(new THREE.OctahedronGeometry(0.32), new THREE.MeshLambertMaterial({ color: 0xb197fc, emissive: 0x3b1470 })); cr3.position.set(0, 2.2, -0.5); vis.add(cr3);
+  }
+}
+function demonBuild(t, vis){
+  var skin = 0xa63d2a, dark = 0x6e2418;
+  cyl(0.14, 0.16, 0.62, dark, -0.2, 0.4, 0, vis); cyl(0.14, 0.16, 0.62, dark, 0.2, 0.4, 0, vis);
+  box(0.24, 0.14, 0.36, 0x2b2118, -0.2, 0.07, 0.04, vis); box(0.24, 0.14, 0.36, 0x2b2118, 0.2, 0.07, 0.04, vis);
+  box(0.88, 0.95, 0.52, skin, 0, 1.35, 0, vis);
+  box(0.9, 0.26, 0.54, 0x3e2723, 0, 0.82, 0, vis);
+  box(0.5, 0.4, 0.06, 0x5d4037, 0, 0.62, 0.2, vis);
+  cyl(0.13, 0.15, 0.7, skin, -0.56, 1.3, 0, vis);
+  var armR = new THREE.Group(); armR.position.set(0.56, 1.72, 0); vis.add(armR);
+  cyl(0.13, 0.15, 0.7, skin, 0, -0.32, 0, armR);
+  cyl(0.05, 0.05, 0.5, 0x4a3226, 0, -0.85, 0.05, armR);
+  box(0.26, 0.5, 0.26, 0x616161, 0, -1.25, 0.05, armR);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.37, 10, 10), mat(dark)); head.position.y = 2.15; vis.add(head);
+  var h1 = cone(0.09, 0.55, 0xe8e3d8, -0.3, 2.5, 0, vis); h1.rotation.z = 0.55;
+  var h2 = cone(0.09, 0.55, 0xe8e3d8, 0.3, 2.5, 0, vis); h2.rotation.z = -0.55;
+  box(0.4, 0.09, 0.05, 0x2b0f0a, 0, 2.26, 0.33, vis);
+  box(0.08, 0.08, 0.03, 0xffd43b, -0.12, 2.16, 0.35, vis); box(0.08, 0.08, 0.03, 0xffd43b, 0.12, 2.16, 0.35, vis);
+  var f1 = cone(0.05, 0.22, 0xf5f5f5, -0.1, 1.9, 0.34, vis); f1.rotation.x = Math.PI;
+  var f2 = cone(0.05, 0.22, 0xf5f5f5, 0.1, 1.9, 0.34, vis); f2.rotation.x = Math.PI;
+}
+function buildMonsterVisual(type, t, vis){
+  var visual = t.visual || null;
+  if(visual === 'demon'){ demonBuild(t, vis); return; }
+  if(type === 'Lang Yêu') wolfBuild(t, vis, visual === 'wolfking');
+  else if(type === 'Thạch Nhân' || type === 'Chúa Mỏ') golemBuild(t, vis, visual === 'golemking');
+  else banditBuild(t, vis, type === 'Trại Chủ');
+  if(t.elite && !visual) crownAt(vis, type === 'Lang Yêu' ? 1.95 : type === 'Sơn Tặc' || type === 'Trại Chủ' ? 2.28 : 2.62);
+}
+
 function makeMonster(type, sx, sz, cfgO){
   var t = cfgO || MTYPES[type];
   var g = new THREE.Group(); g.position.set(sx, 0, sz); scene.add(g);
-  var body = box(1.05*t.scale, 1.3*t.scale, 0.8*t.scale, t.color, 0, 0.95*t.scale, 0, g);
-  var head = new THREE.Mesh(new THREE.SphereGeometry(0.4*t.scale, 10, 10), mat(t.color)); head.position.y = 1.95*t.scale; g.add(head);
-  var e1 = box(0.09,0.09,0.05, 0xff2222, -0.16*t.scale, 2.0*t.scale, 0.36*t.scale, g);
-  var e2 = box(0.09,0.09,0.05, 0xff2222, 0.16*t.scale, 2.0*t.scale, 0.36*t.scale, g);
-  if(type==='Thạch Nhân' || type==='Chúa Mỏ'){ box(1.4*t.scale,0.5,1.0, 0x9e9e9e, 0, 1.85*t.scale, 0, g); }
-  if(t.elite){ box(0.8, 0.3, 0.8, 0xffd166, 0, 2.5*t.scale, 0, g); }
-  if(type==='Lang Yêu'){ box(0.28,0.28,1.1, t.color, 0, 0.8, -0.85, g); body.scale.y = 0.72; head.position.y = 1.55; e1.position.y=1.6; e2.position.y=1.6; }
+  var vis = new THREE.Group(); vis.scale.setScalar(t.scale); g.add(vis);
+  buildMonsterVisual(type, t, vis);
   // HP bar (billboard planes)
   var barG = new THREE.Group(); barG.position.y = 2.65*t.scale; g.add(barG);
   var bg = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.2), new THREE.MeshBasicMaterial({ color: 0x111111, side: THREE.DoubleSide }));
@@ -642,9 +904,76 @@ function ringFx(x, z, color, maxR){
   (function anim(){ var k = (performance.now()-t0)/480; if(k>=1){ scene.remove(r); return; }
     var s = 1 + k*maxR; r.scale.set(s, s, 1); r.material.opacity = 1-k; requestAnimationFrame(anim); })();
 }
+
+function fxAnim(mesh, dur, fn){ mesh.material.transparent = true; var t0 = performance.now(); (function a(){ var k = (performance.now() - t0) / dur; if(k >= 1){ scene.remove(mesh); return; } fn(k); requestAnimationFrame(a); })(); }
+function boltFx(pts, color){
+  var vs = [];
+  for(var i = 0; i < pts.length - 1; i++){ var a = pts[i], b = pts[i + 1]; var mx = (a.x + b.x) / 2 + (Math.random() - 0.5) * 0.7, mz = (a.z + b.z) / 2 + (Math.random() - 0.5) * 0.7, my = (a.y + b.y) / 2 + 0.3;
+    vs.push(a.x, a.y, a.z, mx, my, mz, mx, my, mz, b.x, b.y, b.z); }
+  var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(vs, 3));
+  var line = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: color, transparent: true }));
+  scene.add(line); fxAnim(line, 240, function(k){ line.material.opacity = 1 - k; });
+}
+function fallFx(mesh, x, y0, z, dur){ mesh.position.set(x, y0, z); scene.add(mesh); fxAnim(mesh, dur, function(k){ mesh.position.y = y0 * (1 - k * k); if(k > 0.8) mesh.material.opacity = (1 - k) / 0.2; }); }
+function riseFx(x, z, color, n, spread){
+  for(var i = 0; i < n; i++){ (function(i){ var s = new THREE.Mesh(new THREE.SphereGeometry(0.07 + Math.random() * 0.05, 6, 6), new THREE.MeshBasicMaterial({ color: color, transparent: true }));
+    var a = Math.random() * Math.PI * 2, r = Math.random() * spread; s.position.set(x + Math.cos(a) * r, 0.3, z + Math.sin(a) * r); scene.add(s);
+    fxAnim(s, 900 + i * 60, function(k){ s.position.y = 0.3 + k * 2.2; s.material.opacity = 1 - k; }); })(i); }
+}
+function skillFx(sk, t){
+  if(!player) return;
+  var px = player.position.x, pz = player.position.z;
+  if(S.cls === 'kiem' && sk.id === 's1'){
+    for(var i = 0; i < 3; i++){ (function(i){ var b = box(0.9, 0.06, 0.18, 0x4cc9f0, px, 1.2, pz, scene);
+      fxAnim(b, 550, function(k){ var a = k * Math.PI * 4 + i * 2.1; b.position.set(px + Math.cos(a) * 1.6, 1.2, pz + Math.sin(a) * 1.6); b.rotation.y = -a; b.material.opacity = 1 - k; }); })(i); }
+  } else if(S.cls === 'kiem' && sk.id === 'ult' && t){
+    var c = t.group.position;
+    for(var j = 0; j < 6; j++){ (function(j){ var sw = box(0.09, 1.3, 0.2, 0xbfe3ff, 0, -50, 0, scene);
+      var ox = (Math.random() - 0.5) * 5, oz = (Math.random() - 0.5) * 5;
+      setTimeout(function(){ fallFx(sw, c.x + ox, 13, c.z + oz, 420); ringFx(c.x + ox, c.z + oz, 0x4cc9f0, 1.6); }, j * 70); })(j); }
+  } else if(S.cls === 'kiem' && sk.id === 's2'){
+    ringFx(px, pz, 0xffa94d, 3);
+  } else if(S.cls === 'phap' && sk.id === 's1' && t){
+    var c2 = t.group.position;
+    for(var j2 = 0; j2 < 8; j2++){ (function(j2){ var sh = new THREE.Mesh(new THREE.OctahedronGeometry(0.16), new THREE.MeshBasicMaterial({ color: 0x9be7ff, transparent: true }));
+      var a2 = j2 / 8 * Math.PI * 2; sh.position.set(c2.x + Math.cos(a2) * 0.4, 1.4, c2.z + Math.sin(a2) * 0.4); scene.add(sh);
+      fxAnim(sh, 500, function(k){ sh.position.x = c2.x + Math.cos(a2) * (0.4 + k * 2.2); sh.position.z = c2.z + Math.sin(a2) * (0.4 + k * 2.2); sh.position.y = 1.4 - k * 0.7; sh.material.opacity = 1 - k; }); })(j2); }
+  } else if(S.cls === 'phap' && sk.id === 's2' && t){
+    var pts = [{ x: px, y: 1.8, z: pz }]; var cur = t;
+    pts.push({ x: cur.group.position.x, y: 1.6, z: cur.group.position.z });
+    for(var ci = 0; ci < 2; ci++){ var nx = null, nd = 7;
+      monsters.forEach(function(m){ if(!m.dead && m !== cur){ var dd = dist2d(cur.group.position, m.group.position); if(dd < nd){ nd = dd; nx = m; } } });
+      if(!nx) break; cur = nx; pts.push({ x: cur.group.position.x, y: 1.6, z: cur.group.position.z }); }
+    boltFx(pts, 0x8ef6ff); boltFx(pts, 0xffffff);
+  } else if(S.cls === 'phap' && sk.id === 'ult' && t){
+    var c3 = t.group.position;
+    var met = new THREE.Mesh(new THREE.SphereGeometry(0.55, 10, 10), new THREE.MeshBasicMaterial({ color: 0xff9f1c, transparent: true }));
+    fallFx(met, c3.x, 15, c3.z, 550); setTimeout(function(){ ringFx(c3.x, c3.z, 0xff9f1c, 6); }, 480);
+  } else if(S.cls === 'duoc' && sk.id === 's1'){
+    riseFx(px, pz, 0x69db7c, 10, 1.1);
+  } else if(S.cls === 'duoc' && sk.id === 's2' && t){
+    var c4 = t.group.position;
+    for(var j4 = 0; j4 < 5; j4++){ (function(j4){ var cl = new THREE.Mesh(new THREE.SphereGeometry(0.34, 8, 8), new THREE.MeshBasicMaterial({ color: 0x51cf66, transparent: true, opacity: 0.5 }));
+      cl.position.set(c4.x + (Math.random() - 0.5) * 0.9, 1 + Math.random() * 0.5, c4.z + (Math.random() - 0.5) * 0.9); scene.add(cl);
+      fxAnim(cl, 1100, function(k){ cl.scale.setScalar(1 + k * 0.8); cl.material.opacity = 0.5 * (1 - k); }); })(j4); }
+  } else if(S.cls === 'duoc' && sk.id === 'ult'){
+    riseFx(px, pz, 0xffb3c1, 12, 2.2); riseFx(px, pz, 0x69db7c, 8, 1.4);
+  }
+}
 function spawnLoot(x, z, kind, amt){
-  var geo = kind==='gold' ? new THREE.SphereGeometry(0.32, 10, 10) : new THREE.OctahedronGeometry(0.36);
-  var m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ color: kind==='gold'?0xffd166:0xc77dff, emissive: kind==='gold'?0x664d00:0x5a189a }));
+  var m = new THREE.Group();
+  if(kind === 'gold'){
+    var gm = new THREE.MeshLambertMaterial({ color: 0xffd166, emissive: 0x664d00 });
+    var c1 = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.1, 12), gm); c1.position.y = -0.25; m.add(c1);
+    var c2 = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.1, 12), gm); c2.position.set(0.05, -0.14, 0.03); m.add(c2);
+    var c3 = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 12), new THREE.MeshLambertMaterial({ color: 0xffe066, emissive: 0x664d00 })); c3.position.set(-0.03, -0.03, -0.02); m.add(c3);
+  } else {
+    var k1 = new THREE.Mesh(new THREE.OctahedronGeometry(0.34), new THREE.MeshLambertMaterial({ color: 0xc77dff, emissive: 0x5a189a })); k1.position.y = -0.08; m.add(k1);
+    var k2 = new THREE.Mesh(new THREE.OctahedronGeometry(0.2), new THREE.MeshLambertMaterial({ color: 0xe0aaff, emissive: 0x5a189a })); k2.position.set(0.28, -0.26, 0.1); m.add(k2);
+    var bs = new THREE.Mesh(new THREE.DodecahedronGeometry(0.3), mat(0x616161)); bs.position.y = -0.38; m.add(bs);
+  }
+  var glow = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.56, 20), new THREE.MeshBasicMaterial({ color: kind === 'gold' ? 0xffd166 : 0xc77dff, side: THREE.DoubleSide, transparent: true, opacity: 0.65 }));
+  glow.rotation.x = -Math.PI / 2; glow.position.y = -0.42; m.add(glow);
   m.position.set(x + (Math.random()*1.6-0.8), 0.45, z + (Math.random()*1.6-0.8)); scene.add(m);
   loots.push({ mesh:m, kind:kind, amt:amt, t: Math.random()*6 });
 }
@@ -818,7 +1147,7 @@ function useSkill(i){
     setTarget(t);
   }
   if(sk.kind === 'aoe_target' && !t) t = nearestMonster(16);
-  mp -= sk.mp; skillCd[sk.id] = sk.cd; swingAnim();
+  mp -= sk.mp; skillCd[sk.id] = sk.cd; swingAnim(); skillFx(sk, t);
   var skMul = skillMul(i);
   if(sk.kind === 'aoe_self'){
     ringFx(player.position.x, player.position.z, 0x4cc9f0, sk.radius * 1.6);
@@ -1052,6 +1381,7 @@ function update(dt){
   collide(player.position);
   // walk bob + sword swing
   if(moving) player.position.y = Math.abs(Math.sin(performance.now()*0.012)) * 0.09; else player.position.y = 0;
+  if(talis && talis.length && player){ var tt = performance.now() * 0.0011; for(var ti2 = 0; ti2 < talis.length; ti2++){ var ta = tt + ti2 * 3.1; talis[ti2].position.set(player.position.x + Math.cos(ta) * 0.9, player.position.y + 1.75 + Math.sin(tt * 1.6 + ti2 * 2.0) * 0.16, player.position.z + Math.sin(ta) * 0.9); talis[ti2].rotation.y = -ta + Math.PI / 2; } }
   if(playerAtkAnim > 0){ playerAtkAnim -= dt; swordPivot.rotation.x = -Math.sin((0.22-playerAtkAnim)/0.22 * Math.PI) * 1.7; }
   else swordPivot.rotation.x = 0;
 
@@ -1514,7 +1844,7 @@ function bossSpawn(){
   if(bossRef && !bossRef.dead) return;
   var base = MTYPES['Lang Yêu']; var cfg = {};
   Object.keys(base).forEach(function(k){ cfg[k] = base[k]; });
-  cfg.lvl = 12; cfg.hp = 1700; cfg.atk = 26; cfg.def = 10; cfg.xp = 800; cfg.gold = [200, 320]; cfg.ht = [30, 50]; cfg.scale = 2.4; cfg.elite = true; cfg.color = 0x30324a; cfg.speed = 4.2;
+  cfg.lvl = 12; cfg.hp = 1700; cfg.atk = 26; cfg.def = 10; cfg.xp = 800; cfg.gold = [200, 320]; cfg.ht = [30, 50]; cfg.scale = 2.4; cfg.elite = true; cfg.color = 0x30324a; cfg.visual = 'wolfking'; cfg.speed = 4.2;
   var b = makeMonster('Lang Yêu', -84, -84, cfg);
   b.boss = true; b.noRespawn = true; b.dispName = '🐺 Hắc Lang Vương'; bossRef = b;
   toast('🐺 HẮC LANG VƯƠNG xuất hiện ở Rừng Thanh Lam!');
@@ -1886,7 +2216,7 @@ function fbSpawn(def){
   var cur = fbRefs[def.id]; if(cur && !cur.dead) return;
   var base = MTYPES[def.base]; var cfg = {};
   Object.keys(base).forEach(function(k){ cfg[k] = base[k]; });
-  cfg.lvl = def.lvl; cfg.hp = def.hp; cfg.atk = def.atk; cfg.def = def.def; cfg.xp = def.xp; cfg.gold = def.gold; cfg.ht = def.ht; cfg.scale = def.scale; cfg.elite = true; cfg.color = def.color; cfg.speed = def.speed;
+  cfg.lvl = def.lvl; cfg.hp = def.hp; cfg.atk = def.atk; cfg.def = def.def; cfg.xp = def.xp; cfg.gold = def.gold; cfg.ht = def.ht; cfg.scale = def.scale; cfg.elite = true; cfg.color = def.color; cfg.speed = def.speed; cfg.visual = def.id === 'thachma' ? 'golemking' : 'demon';
   var b = makeMonster(def.base, def.x, def.z, cfg);
   b.boss = true; b.fb = def.id; b.fbName = def.name; b.noRespawn = true; b.dispName = def.icon + ' ' + def.name;
   fbRefs[def.id] = b;
@@ -2140,13 +2470,18 @@ function stoneBonus(key){
   if(S.equip) Object.keys(S.equip).forEach(function(sl){ var it = S.equip[sl]; if(it && it.stone === key) sum += STONE_VAL[key]; });
   return sum;
 }
+function itemIcon(it){
+  var ic = it.slot === 'weapon' ? (S.cls === 'phap' ? '🔮' : S.cls === 'duoc' ? '🪭' : '🗡️') : it.slot === 'armor' ? '🛡️' : it.slot === 'hat' ? '🧢' : '🥾';
+  var col = it.tier >= 5 ? '#e599f7' : it.tier >= 3 ? '#4cc9f0' : '#adb5bd';
+  return '<span class="itIcon" style="border-color:' + col + ';box-shadow:0 0 6px ' + col + '55">' + ic + '</span>';
+}
 function renderEquip(){
   document.getElementById('charSummary').innerHTML = '<div class="profCard"><div class="profIcon">' + cls().icon + '</div><div>' + (titleName() ? '<span style="color:#e599f7;font-size:11px">' + titleName() + '</span><br>' : '') + '<b>' + cls().name + '</b> · Cấp ' + S.lvl + ' · Lực chiến <b style="color:#ffd166">' + power() + '</b><br>Công ' + atk() + ' · Thủ ' + def() + ' · HP ' + maxHp() + ' · MP ' + maxMp() + '<br>🪙 ' + S.gold + ' vàng · 💜 ' + S.ht + ' Huyền Thiết<br>🔮 Đá Ma Thuật: ' + ((S.stones.atk||0) + (S.stones.def||0) + (S.stones.hp||0)) + ' · 🧩 Mảnh Thần Bí: ' + (S.shards || 0) + '</div></div>';
   var html = '<div class="eqGrid">';
   Object.keys(SLOT_DEF).forEach(function(sl){
     var it = S.equip[sl];
     var stoneHtml = it.stone ? '<span style="color:#b197fc">🔮 ' + STONE_NAME[it.stone] + ' +' + STONE_VAL[it.stone] + '</span>' : (['atk','def','hp'].filter(function(k){ return (S.stones[k] || 0) > 0; }).map(function(k){ return '<button data-socket="' + sl + ':' + k + '">🔮 Khảm ' + STONE_NAME[k] + '</button>'; }).join(' '));
-    html += '<div class="slotRow eqCard' + (S.enhSlot === sl ? ' sel' : '') + '" data-slot="' + sl + '"><span>' + SLOT_DEF[sl].name + '</span><b>' + it.name + '</b> <span class="st">+' + it.enh + '</span><span>' + (SLOT_DEF[sl].stat === 'atk' ? 'Công ' : 'Thủ ') + itemStat(it) + '</span>' + (stoneHtml ? '<span>' + stoneHtml + '</span>' : '') + '</div>';
+    html += '<div class="slotRow eqCard' + (S.enhSlot === sl ? ' sel' : '') + '" data-slot="' + sl + '"><span>' + SLOT_DEF[sl].name + '</span>' + itemIcon(it) + '<b>' + it.name + '</b> <span class="st">+' + it.enh + '</span><span>' + (SLOT_DEF[sl].stat === 'atk' ? 'Công ' : 'Thủ ') + itemStat(it) + '</span>' + (stoneHtml ? '<span>' + stoneHtml + '</span>' : '') + '</div>';
   });
   html += '</div>';
   document.getElementById('equipSlots').innerHTML = html;
@@ -2160,7 +2495,7 @@ function renderEquip(){
   if(S.bagExp >= 5){ bx.textContent = 'Túi đã tối đa (140 ô)'; bx.disabled = true; }
   else { bx.textContent = '➕ Mở rộng +20 ô (' + (400 * (S.bagExp + 1)) + ' vàng)'; bx.disabled = false; }
   document.getElementById('bagList').innerHTML = S.bag.length ? '<div class="bagGrid">' + S.bag.map(function(b, i){
-    return '<div class="bagCard"><b>' + b.name + '</b><br>' + (SLOT_DEF[b.slot].stat === 'atk' ? 'Công ' : 'Thủ ') + itemStat(b) + ' · bậc ' + b.tier + '<br><button class="eq" data-act="equip" data-i="' + i + '">Mặc</button> <button data-act="sell" data-i="' + i + '">Bán</button> <button data-act="decomp" data-i="' + i + '">Rã</button></div>';
+    return '<div class="bagCard">' + itemIcon(b) + '<b>' + b.name + '</b><br>' + (SLOT_DEF[b.slot].stat === 'atk' ? 'Công ' : 'Thủ ') + itemStat(b) + ' · bậc ' + b.tier + '<br><button class="eq" data-act="equip" data-i="' + i + '">Mặc</button> <button data-act="sell" data-i="' + i + '">Bán</button> <button data-act="decomp" data-i="' + i + '">Rã</button></div>';
   }).join('') + '</div>' : '<div style="color:#adb5bd">Túi trống — đánh quái có 18% tỉ lệ rơi trang bị.</div>';
 }
 function doEnhance(){
@@ -2180,7 +2515,7 @@ function doEnhance(){
     else toast('💥 Cường hoá THẤT BẠI (không tụt cấp ở mốc này)');
     beep(160, 0.2);
   }
-  updWeaponGlow(); updHud(); renderEquip(); saveGame(true);
+  updWeaponGlow(); refreshPlayerLook(); updHud(); renderEquip(); saveGame(true);
 }
 function renderDaily(){
   dailyReset();
@@ -2269,7 +2604,7 @@ function bindPanels(){
     if(act === 'equip'){ var old = S.equip[it.slot]; S.equip[it.slot] = it; S.bag[i] = old; logLoot('🎒 Đã mặc: ' + it.name); }
     if(act === 'sell'){ var g = 15 + it.tier * 10 + it.enh * 8; S.gold += g; S.bag.splice(i, 1); logLoot('🪙 Bán ' + it.name + ' +' + g + ' vàng'); }
     if(act === 'decomp'){ var h = 3 + it.tier * 2; S.bag.splice(i, 1); addHT(h, false); logLoot('💜 Phân rã ' + it.name + ' +' + h + ' Huyền Thiết'); if(it.tier >= 5){ S.shards = (S.shards || 0) + 1; logLoot('🧩 +1 Mảnh Thần Bí (rã đồ bậc 5+)'); } }
-    updWeaponGlow(); updHud(); renderEquip(); saveGame(true);
+    updWeaponGlow(); refreshPlayerLook(); updHud(); renderEquip(); saveGame(true);
   });
   document.getElementById('dailyList').addEventListener('click', function(e){
     var btn = e.target.closest('button'); if(!btn || btn.disabled) return;
@@ -2315,17 +2650,27 @@ document.querySelectorAll('.classCard').forEach(function(c){
     document.querySelectorAll('.classCard').forEach(function(x){ x.classList.remove('sel'); }); c.classList.add('sel');
   });
 });
+document.querySelectorAll('.genChip').forEach(function(c){
+  if(saveExisted && S.gender && c.getAttribute('data-gen') === S.gender){
+    document.querySelectorAll('.genChip').forEach(function(x){ x.classList.remove('sel'); }); c.classList.add('sel');
+  }
+  c.addEventListener('click', function(){
+    document.querySelectorAll('.genChip').forEach(function(x){ x.classList.remove('sel'); }); c.classList.add('sel');
+  });
+});
 document.getElementById('playBtn').addEventListener('click', function(){
   var sel = document.querySelector('.classCard.sel');
   var chosen = sel ? sel.getAttribute('data-cls') : 'kiem';
+  var genEl = document.querySelector('.genChip.sel');
+  var chosenGen = genEl ? genEl.getAttribute('data-gen') : 'nam';
   if(saveExisted && chosen !== S.cls){
     if(!confirm('Đã có nhân vật ' + cls().name + ' (cấp ' + S.lvl + '). Tạo nhân vật ' + CLASSES[chosen].name + ' mới sẽ XOÁ tiến trình cũ. Tiếp tục?')) return;
     try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
-    S.cls = chosen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; S.reqOffers = []; S.reqActive = []; S.reqDay = ''; S.bagExp = 0; S.potionsBig = 0; S.luckStones = 0; S.bcClears = 0; S.mpClears = 0; S.summons = 0; S.reqDone = 0; S.achClaimed = {}; S.skillLvl = { s1: 1, s2: 1, ult: 1 }; S.skillEss = 0; S.title = ''; S.autoPot = true; S.mountOwned = []; S.mountEq = ''; S.navFB = ''; S.stones = { atk: 0, def: 0, hp: 0 }; S.shards = 0; S.towerBest = 0; S.inTower = false; skillCd = { s1: 0, s2: 0, ult: 0 };
+    S.cls = chosen; S.gender = chosenGen; S.lvl = 1; S.xp = 0; S.gold = 0; S.ht = 0; S.potions = 5; S.questIdx = 0; S.questProg = 0; S.bag = []; S.equip = starterEquip(); S.daily = null; dailyReset(); S.nc = {}; S.spirits = { owned: {}, equipped: [] }; S.tickets = 0; S.killsByType = {}; S.codexClaimed = {}; S.reqOffers = []; S.reqActive = []; S.reqDay = ''; S.bagExp = 0; S.potionsBig = 0; S.luckStones = 0; S.bcClears = 0; S.mpClears = 0; S.summons = 0; S.reqDone = 0; S.achClaimed = {}; S.skillLvl = { s1: 1, s2: 1, ult: 1 }; S.skillEss = 0; S.title = ''; S.autoPot = true; S.mountOwned = []; S.mountEq = ''; S.navFB = ''; S.stones = { atk: 0, def: 0, hp: 0 }; S.shards = 0; S.towerBest = 0; S.inTower = false; skillCd = { s1: 0, s2: 0, ult: 0 };
     hp = maxHp(); mp = maxMp(); saveExisted = false;
   } else if(!saveExisted){
-    S.cls = chosen; S.equip = starterEquip(); dailyReset(); hp = maxHp(); mp = maxMp();
-  }
+    S.cls = chosen; S.gender = chosenGen; S.equip = starterEquip(); dailyReset(); hp = maxHp(); mp = maxMp();
+  } else if(saveExisted){ S.gender = chosenGen; }
   makePlayer();
   rebuildPet();
   reqEnsure();

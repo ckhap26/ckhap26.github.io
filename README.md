@@ -1,9 +1,17 @@
-# Huyền Kiếm Online — bản V2.0 (chơi thử)
+# Huyền Kiếm Online — bản V2.1 (chơi thử)
 
 Game 3D kiếm hiệp chạy ngay trên trình duyệt, không cần cài đặt.
 
 ## ▶️ Chơi ngay
 **https://ckhap26.github.io/** — mở link trên điện thoại hoặc máy tính, chọn phái rồi bấm **Vào game**.
+
+## Mới trong V2.1 — Đồ hoạ dựng lại từ đầu theo mẫu thiết kế
+- **🧍 Nhân vật 3D thật**: cả 3 phái giờ là người hoàn chỉnh (tay, chân, đầu, tóc) thay cho hình khối cũ — và **mỗi phái có cả Nam và Nữ** để chọn ngay ở màn hình đầu (búi tóc + trâm cho Nam; đuôi ngựa / tóc dài / tóc tết lệch cho Nữ). Trang phục bám đúng bản concept: giáp vai bạc của Kiếm Tông, tay áo rộng + **2 lá bùa bay quanh người** của Linh Pháp, **hồ lô sau lưng** của Dược Sư
+- **✨ Đồ hiện theo bậc trên người**: mặc đồ bậc cao là nhân vật đổi hình ngay — vũ khí 3 bậc hình dạng (thô → tinh xảo → trắng-vàng phát sáng gắn ngọc), áo bậc 5–6 sáng trắng + viền vàng, mũ thành vòng trán bạc/vàng gắn ngọc, giày đổi màu theo bậc
+- **💥 Hiệu ứng skill theo bảng mẫu**: Thiên Kiếm Giáng có kiếm từ trời rơi, Lôi Ấn có tia sét lan qua từng quái, Xoáy Kiếm có lưỡi kiếm khí xoay, Vẫn Thạch rơi lửa, hồi máu có hào quang xanh bay lên, độc vân xanh phủ mục tiêu
+- **👹 Quái & boss có hình riêng**: Sơn Tặc khăn đỏ cầm đao, Lang Yêu sói 4 chân, Thạch Nhân người đá lõi ngọc phát sáng, tinh anh đội vương miện vàng; boss bãi: Hắc Lang Vương bờm gai, Thạch Ma Vương pha lê tím, Sơn Quỷ Vương sừng xương nanh lớn
+- **🏘️ Thành Thiên Vân có người**: trưởng lão giao nhiệm vụ (râu trắng, trượng), lái buôn + quầy hàng bày bình thuốc, thợ rèn + lò lửa cháy bên đe, 2 lính gác cổng cầm giáo
+- **🎒 Vật phẩm rõ hình**: đồ trong túi/trang bị có icon theo loại với viền màu theo bậc (xám/xanh/tím); vật rơi ngoài bãi thành chồng xu vàng và cụm pha lê Huyền Thiết phát sáng
 
 ## Mới trong V2.0 — bố cục theo phong cách MIR4
 - **🗺️ Bản đồ phân cấp 2 lớp**: mở Bản đồ thấy **bản đồ đại lục Vân Châu** với 3 khu vực bấm được → vào **chi tiết từng khu**: điểm đến, boss bãi của khu đó, và riêng Thành Thiên Vân có danh sách **cổng cảnh** (Bí Cảnh / Ma Phương / Tháp) bấm vào là vào ngay — đúng như cách MIR4 tổ chức Continent Map → Area → Map
